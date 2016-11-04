@@ -170,8 +170,8 @@
           unit: "minute"
         }
         
-        var $pastPageViewsSlotToday = MP.api.segment('Page View', pageViewSlotParams)
-        var $pastPageViewsSlotYesterday = MP.api.segment('Page View', pageViewSlotParams)
+        var $pastPageViewsSlotToday = MP.api.segment('Page View', pageViewSlotTodayParams)
+        var $pastPageViewsSlotYesterday = MP.api.segment('Page View', pageViewSlotYesterdayParams)
         
         Promises.all([$pastPageViewsSlotToday,$pastPageViewsSlotYesterday]).then(function(todayData, yesterdayData){
           debugger
