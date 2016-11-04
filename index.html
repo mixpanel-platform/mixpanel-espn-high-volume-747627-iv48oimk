@@ -176,8 +176,12 @@
         Promise.all([$pastPageViewsSlotToday,$pastPageViewsSlotYesterday]).then(function(dataArray){
           var today = dataArray[0].json
           var yesterday = dataArray[0].json
+          debugger
           _.each(today, function(dates, slot){
             _.each(dates, function(value, date){
+              console.log(today)
+              console.log(yesterday)
+              console.log(slot)
               debugger
             })
           })
