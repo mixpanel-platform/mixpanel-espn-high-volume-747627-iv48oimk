@@ -158,15 +158,15 @@
         var pageViewSlotTodayParams = {
           where: 'defined (properties["Referrer Slot"]) and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] == "Home Page") and (properties["Edition Name"] == "English / United States") and defined (properties["Story Headline"])',
           on: 'properties["Referrer Slot"]',
-          to_date: utcToEst.toISOString().split('T')[0],
-          from_date: utcToEst.toISOString().split('T')[0],
+          to_date: new Date(utcToEst - 60 * 60 * 1000 * 24).toISOString().split('T')[0],
+          from_date: new Date(utcToEst - 60 * 60 * 1000 * 24).toISOString().split('T')[0],
           unit: "minute"
         }
         var pageViewSlotYesterdayParams = {
           where: 'defined (properties["Referrer Slot"]) and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] == "Home Page") and (properties["Edition Name"] == "English / United States") and defined (properties["Story Headline"])',
           on: 'properties["Referrer Slot"]',
-          to_date: new Date(utcToEst - 60 * 60 * 1000 * 24).toISOString().split('T')[0],
-          from_date: new Date(utcToEst - 60 * 60 * 1000 * 24).toISOString().split('T')[0],
+          to_date: new Date(utcToEst - 60 * 60 * 1000 * 24 * 2).toISOString().split('T')[0],
+          from_date: new Date(utcToEst - 60 * 60 * 1000 * 24 * 2).toISOString().split('T')[0],
           unit: "minute"
         }
         
