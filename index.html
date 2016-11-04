@@ -182,14 +182,12 @@
           _.each(todayData, function(dates, slot){
             var res = {}
             _.each(dates, function(value, date){
-              try {
                 var y = new Date(new Date - 36e5 * 24)
                 var yStringDay = [y.getFullYear(), pad(y.getMonth() + 1, 2), pad(y.getDate(), 2)].join("-")
                 var yStringTime = date.split(' ')[1]
                 var yString = yStringDay + " " + yStringTime
                 res[slot] = res[slot] || {}
                 res[slot][date] = value - yesterdayData[slot][yString]
-              }
             })
             graphData.push(res)
           })
