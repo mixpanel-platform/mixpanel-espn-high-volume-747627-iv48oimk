@@ -197,6 +197,7 @@
           $('.pageViewsSlotDiv').removeClass('hidden')
           var graphData = {}
           var tableData = {}
+          debugger
           _.each(data, function(dateObjs, series){
             [graphData[series], tableData[series]] = filterData(dateObjs, ' ')
           })
