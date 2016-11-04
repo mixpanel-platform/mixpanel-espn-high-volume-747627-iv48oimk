@@ -173,7 +173,7 @@
         var $pastPageViewsSlotToday = MP.api.segment('Page View', pageViewSlotParams)
         var $pastPageViewsSlotYesterday = MP.api.segment('Page View', pageViewSlotParams)
         
-        Promises.all([$pastPageViewsSlotToday,$pastPageViewsSlotYesterday).then(function(todayData, yesterdayData){
+        Promises.all([$pastPageViewsSlotToday,$pastPageViewsSlotYesterday]).then(function(todayData, yesterdayData){
           debugger
           // $('.pageViewsSlotDiv').removeClass('hidden')
           // var graphData = {}
