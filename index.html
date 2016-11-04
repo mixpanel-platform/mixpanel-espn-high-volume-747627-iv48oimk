@@ -185,9 +185,6 @@
               var yString = [y.getFullYear(), pad(y.getMonth() + 1, 2), pad(y.getDate(), 2)].join("-")
               res[slot] = res[slot] || {}
               res[slot][date] = value - yesterdayData[slot][yString]
-              console.log(today)
-              console.log(yesterday)
-              console.log(slot)
             })
             graphData.push(res)
             debugger
