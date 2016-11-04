@@ -178,7 +178,8 @@
         Promise.all([$pastPageViewsSlotToday,$pastPageViewsSlotYesterday]).then(function(dataArray){
           var todayData = dataArray[0].json
           var yesterdayData = dataArray[1].json
-          var graphData = []
+          var graphData = {}
+          var data = []
           _.each(todayData, function(dates, slot){
             var res = {}
             _.each(dates, function(value, date){
@@ -189,15 +190,16 @@
                 res[slot] = res[slot] || {}
                 res[slot][date] = value - yesterdayData[slot][yString]
             })
-            graphData.push(res)
+            data.push(res)
           })
           
-          // $('.pageViewsSlotDiv').removeClass('hidden')
-          // var graphData = {}
-          // var tableData = {}
-          // _.each(data.json, function(dateObjs, series){
-          // [graphData[series], tableData[series]] = filterData(dateObjs, ' ')
-          // })
+          
+          $('.pageViewsSlotDiv').removeClass('hidden')
+          var graphData = {}
+          var tableData = {}
+          _.each(data, function(dateObjs, series){
+            [graphData[series], tableData[series]] = filterData(dateObjs, ' ')
+          })
           debugger
           var $chart = $('.pageViewsSlotChart').MPChart({
             highchartsOptions: highChartsConfig,
