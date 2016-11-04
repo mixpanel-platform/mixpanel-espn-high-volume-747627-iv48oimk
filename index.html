@@ -176,7 +176,6 @@
         Promise.all([$pastPageViewsSlotToday,$pastPageViewsSlotYesterday]).then(function(dataArray){
           var todayData = dataArray[0].json
           var yesterdayData = dataArray[1].json
-          debugger
           var graphData = []
           _.each(todayData, function(dates, slot){
             var res = {}
@@ -194,7 +193,6 @@
               }
             })
             graphData.push(res)
-            debugger
           })
           
           // $('.pageViewsSlotDiv').removeClass('hidden')
