@@ -190,9 +190,6 @@
                 res[slot] = res[slot] || {}
                 res[slot][date] = value - yesterdayData[slot][yString]
               }
-              catch (e) {
-                debugger
-              }
             })
             graphData.push(res)
           })
@@ -203,6 +200,7 @@
           // _.each(data.json, function(dateObjs, series){
           // [graphData[series], tableData[series]] = filterData(dateObjs, ' ')
           // })
+          debugger
           var $chart = $('.pageViewsSlotChart').MPChart({
             highchartsOptions: highChartsConfig,
             chartType: 'line',
