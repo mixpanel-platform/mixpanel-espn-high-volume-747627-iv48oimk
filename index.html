@@ -93,6 +93,73 @@
         return new Date(utcToEst - 1000 * 60 * 60 * 24 * 7).toISOString().split(':')[0] == new Date(event.time).toISOString().split(':')[0]
       }
     </script>
+    <script id="averageQuery">
+      var utcToEst = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
+
+      // var params = { 
+      //   from: new Date(utcToEst - 1000 * 3600 * 24 * 30).toISOString().split('T')[0],
+      //   to: utcToEst.toISOString().split('T')[0],
+      // }
+      
+      function main() {
+        return Events({
+          from_date: params.from,
+          to_date:   params.to,
+          event_selectors: [{event: 'Page View', selector:'defined (properties["Referrer Slot"]) and defined (properties["Referrer Position"]) and (properties["Edition Name"] == "English / United States") and defined (properties["Story Headline"])'}]
+        })
+        .groupBy(["properties.Referrer Slot", getHour], mixpanel.reducer.count())
+        .map(item => {
+          var res = {}
+          res.key = item.key
+          res.value = (item.value / ((new Date(params.to)  - new Date(params.from)) / (36e5 * 24))).toFixed()
+          return res
+        })
+        .reduce((accs,items) => {
+          var res = {}
+          _.each(items, item => {
+            res[item.key[0]] = res[item.key[0]] || {}
+            res[item.key[0]][item.key[1]] = Number(res[item.key[0]][item.key[1]]) + Number(item.value) || Number(item.value)
+          })
+          _.each(accs, acc =>{
+            _.each(acc, (hourVals, slot)=> {
+              res[slot] = res[slot] || {}
+              _.each(hourVals, (val, hour)=>{
+                res[slot][hour] = res[slot][hour] + val || val
+              })
+            })
+          })
+          return res
+        })
+        // .filter(item => item.key[0] == 1)
+      }
+      
+      
+      function getHour(event){
+        return new Date(event.time).getHours()
+      }
+      // go grab the last thirty days 
+      // group by hour & slot & position type
+      //
+      
+      
+      
+      
+      function stringSlot(event){
+        return String(event.properties["Referrer Slot"])
+      }
+      
+      function today(event){
+        return utcToEst.toISOString().split('T')[0] == new Date(event.time).toISOString().split('T')[0]
+      }
+      
+      function yesterdayHour(event){
+        return new Date(utcToEst - 1000 * 60 * 60 * 24).toISOString().split(':')[0] == new Date(event.time).toISOString().split(':')[0]
+      }
+      
+      function weekHour(event){
+        return new Date(utcToEst - 1000 * 60 * 60 * 24 * 7).toISOString().split(':')[0] == new Date(event.time).toISOString().split(':')[0]
+      }
+    </script>
     <script>
       // Use Data tables for better sorting/limiting etc
        /* slot page views */
@@ -163,21 +230,20 @@
           limit: 500,
           unit: "minute"
         }
-        var pageViewSlotYesterdayParams = {
-          where: 'defined (properties["Referrer Slot"]) and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] == "Home Page") and (properties["Edition Name"] == "English / United States") and defined (properties["Story Headline"])',
-          on: 'properties["Referrer Slot"]',
-          to_date: new Date(new Date() - 60 * 60 * 1000 * 24 * 1).toISOString().split('T')[0],
-          from_date: new Date(new Date() - 60 * 60 * 1000 * 24 * 1).toISOString().split('T')[0],
-          limit: 500,
-          unit: "minute"
+        var pageViewAverageParams = {
+          to: new Date().toISOString().split('T')[0],
+          from: new Date(new Date() - 60 * 60 * 1000 * 24 * 30).toISOString().split('T')[0],
+          os: 'desktop'
         }
         
         var $pastPageViewsSlotToday = MP.api.segment('Page View', pageViewSlotTodayParams)
-        var $pastPageViewsSlotYesterday = MP.api.segment('Page View', pageViewSlotYesterdayParams)
+        var averageQuery = $('#averageQuery').html()
+        var $pastPageViewsSlotAverage = MP.api.jql(averageQuery, pageViewAveragesParams)
         
-        Promise.all([$pastPageViewsSlotToday,$pastPageViewsSlotYesterday]).then(function(dataArray){
+        Promise.all([$pastPageViewsSlotToday,$pastPageViewsSlotAverage]).then(function(dataArray){
           var todayData = dataArray[0].json
           var yesterdayData = dataArray[1].json
+          debugger
           var graphData = {}
           var data = []
           _.each(todayData, function(dates, slot){
