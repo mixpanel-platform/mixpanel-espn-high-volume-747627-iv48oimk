@@ -137,28 +137,6 @@
       function getHour(event){
         return new Date(event.time).getHours()
       }
-      // go grab the last thirty days 
-      // group by hour & slot & position type
-      //
-      
-      
-      
-      
-      function stringSlot(event){
-        return String(event.properties["Referrer Slot"])
-      }
-      
-      function today(event){
-        return utcToEst.toISOString().split('T')[0] == new Date(event.time).toISOString().split('T')[0]
-      }
-      
-      function yesterdayHour(event){
-        return new Date(utcToEst - 1000 * 60 * 60 * 24).toISOString().split(':')[0] == new Date(event.time).toISOString().split(':')[0]
-      }
-      
-      function weekHour(event){
-        return new Date(utcToEst - 1000 * 60 * 60 * 24 * 7).toISOString().split(':')[0] == new Date(event.time).toISOString().split(':')[0]
-      }
     </script>
     <script>
       // Use Data tables for better sorting/limiting etc
@@ -228,8 +206,9 @@
           to_date: new Date().toISOString().split('T')[0],
           from_date: new Date().toISOString().split('T')[0],
           limit: 500,
-          unit: "minute"
+          unit: "hour"
         }
+        
         var pageViewAverageParams = {
           to: new Date().toISOString().split('T')[0],
           from: new Date(new Date() - 60 * 60 * 1000 * 24 * 30).toISOString().split('T')[0],
@@ -238,7 +217,7 @@
         
         var $pastPageViewsSlotToday = MP.api.segment('Page View', pageViewSlotTodayParams)
         var averageQuery = $('#averageQuery').html()
-        var $pastPageViewsSlotAverage = MP.api.jql(averageQuery, pageViewAveragesParams)
+        var $pastPageViewsSlotAverage = MP.api.jql(averageQuery, pageViewAverageParams)
         
         Promise.all([$pastPageViewsSlotToday,$pastPageViewsSlotAverage]).then(function(dataArray){
           var todayData = dataArray[0].json
