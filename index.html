@@ -350,9 +350,10 @@
       function filterTableData(dateObjs, seperator, averageData){
         debugger
         var dateObj = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
-        var graphData = _.pick(dateObjs, function(v,date) { 
+        var betterThenBaseline = 0
+        _.each(dateObjs, function(v,date) { 
           if (new Date(date.replace('T', ' ')) > dateObj - (1000 * 60 * 60 * 8) && new Date(date.replace('T', ' ')) < dateObj){
-            debugger
+            if (v >= .90) betterThenBaseline++
           }
         }) 
         var currHour = seperator + pad(dateObj.getHours(),2) + ':00:00'
