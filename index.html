@@ -231,7 +231,6 @@
         Promise.all([$pastPageViewsSlotToday,$pastPageViewsSlotAverage]).then(function(dataArray){
           var todayData = dataArray[0].json
           var averageData = dataArray[1][0]
-          debugger
           var graphData = {}
           var res = {}
           _.each(todayData, function(dates, slot){
@@ -346,7 +345,6 @@
       }
       
       function filterTableData(dateObjs, seperator, averageData){
-        debugger
         var dateObj = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
         var betterThenBaseline = 0
         _.each(dateObjs, function(v,date) { 
