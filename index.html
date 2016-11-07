@@ -206,7 +206,7 @@
           where: 'defined (properties["Referrer Slot"]) and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] == "Home Page") and (properties["Edition Name"] == "English / United States") and defined (properties["Story Headline"])',
           on: 'properties["Referrer Slot"]',
           to_date: new Date().toISOString().split('T')[0],
-          from_date: new Date(new Date() - 60 * 60 * 1000 * 24 * 7).toISOString().split('T')[0],
+          from_date: new Date().toISOString().split('T')[0],
           limit: 500,
           unit: "hour"
         }
@@ -330,7 +330,7 @@
       function filterData(dateObjs, seperator){
         var dateObj = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
         var graphData = _.pick(dateObjs, function(v,date) { 
-          if (new Date(date.replace('T', ' ')) > dateObj - (1000 * 60 * 60 * 24 * 7) && new Date(date.replace('T', ' ')) < dateObj){
+          if (new Date(date.replace('T', ' ')) > dateObj - (1000 * 60 * 60 * 8) && new Date(date.replace('T', ' ')) < dateObj){
             return true
           }
         })  
