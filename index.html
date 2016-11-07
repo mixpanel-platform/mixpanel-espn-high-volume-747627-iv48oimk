@@ -350,23 +350,23 @@
       function filterTableData(dateObjs, seperator, averageData){
         debugger
         var dateObj = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
-       
+        var graphData = _.pick(dateObjs, function(v,date) { 
+          if (new Date(date.replace('T', ' ')) > dateObj - (1000 * 60 * 60 * 8) && new Date(date.replace('T', ' ')) < dateObj){
+            debugger
+          }
+        }) 
         var currHour = seperator + pad(dateObj.getHours(),2) + ':00:00'
         var currDay = dateObj.getFullYear() + '-' + pad((dateObj.getMonth() + 1),2) + '-' + pad(dateObj.getDate(),2) + currHour
-        var lastDateObj = new Date(new Date() - (1000 * 60 * 60 * 24))
-        var lastDay = lastDateObj.getFullYear() + '-' + pad((lastDateObj.getMonth() + 1),2) + '-' + pad(lastDateObj.getDate(),2) + currHour
-        var lastWkObj = new Date(new Date() - (1000 * 60 * 60 * 24 * 7))
-        var lastWeek = lastWkObj.getFullYear() + '-' + pad((lastWkObj.getMonth() + 1),2) + '-' + pad(lastWkObj.getDate(),2) + currHour
+        
         
         var percentYesterday = percent(dateObjs[currDay], dateObjs[lastDay])
         var percentLastWeek = percent(dateObjs[currDay], dateObjs[lastWeek])
         if (percentLastWeek !== percentLastWeek) debugger
         var tableData = {
           'Current Hour': dateObjs[currDay] || 0,
-          'Percent Day over Day': percentYesterday,
-          '24 Hours Ago': dateObjs[lastDay] || 0, 
-          'Percent Last Week': percentLastWeek,
-          'Last Week': dateObjs[lastWeek] || 0
+          'Average': averageData[dateObj.getHours()],
+          'Better Then Baseline' : betterThenBaseline,
+          'Reco': 'foo'
         }
         return tableData
       }
