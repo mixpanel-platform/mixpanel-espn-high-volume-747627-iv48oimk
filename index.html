@@ -154,10 +154,8 @@
             columns: [
                 { title: 'Slot', data: 'name' },
                 { title: 'Current Hour', data: 'Current Hour' },
-                { title: '% Change over Yesterday', data: 'Percent Day over Day' },
-                { title: '24 Hours Ago', data: '24 Hours Ago'},
-                { title: '% Change over Last Week', data: 'Percent Last Week' },
-                { title: 'Last Week', data: 'Last Week' },
+                { title: 'Average', data: 'average' },
+                { title: 'Above Baseline', data: 'baseline'},
             ]
         });
         
@@ -265,11 +263,11 @@
           
         //   $pageViewsSlotTable.clear()
           
-        //   _.each(tableData, function(vals, slot){
-        //     var row = _.extend({'name': slot}, vals)
-        //     $pageViewsSlotTable.row.add(row)
-        //   })
-        // $pageViewsSlotTable.draw();
+          _.each(tableData, function(vals, slot){
+            var row = _.extend({'name': slot}, vals)
+            $pageViewsSlotTable.row.add(row)
+          })
+        $pageViewsSlotTable.draw();
         })
         
         
@@ -360,9 +358,8 @@
         var currDay = dateObj.getFullYear() + '-' + pad((dateObj.getMonth() + 1),2) + '-' + pad(dateObj.getDate(),2) + currHour
         var tableData = {
           'Current Hour': dateObjs[currDay] || 0,
-          'Average': averageData[dateObj.getHours()],
-          'Better Then Baseline' : betterThenBaseline,
-          'Reco': 'foo'
+          'average': averageData[dateObj.getHours()],
+          'baseline' : betterThenBaseline,
         }
         return tableData
       }
