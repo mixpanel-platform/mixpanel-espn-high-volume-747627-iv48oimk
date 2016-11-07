@@ -358,11 +358,6 @@
         }) 
         var currHour = seperator + pad(dateObj.getHours(),2) + ':00:00'
         var currDay = dateObj.getFullYear() + '-' + pad((dateObj.getMonth() + 1),2) + '-' + pad(dateObj.getDate(),2) + currHour
-        
-        
-        var percentYesterday = percent(dateObjs[currDay], dateObjs[lastDay])
-        var percentLastWeek = percent(dateObjs[currDay], dateObjs[lastWeek])
-        if (percentLastWeek !== percentLastWeek) debugger
         var tableData = {
           'Current Hour': dateObjs[currDay] || 0,
           'Average': averageData[dateObj.getHours()],
