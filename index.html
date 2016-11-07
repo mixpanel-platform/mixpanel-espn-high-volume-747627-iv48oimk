@@ -225,25 +225,25 @@
           var graphData = {}
           var res = {}
           _.each(todayData, function(dates, slot){
-            _.each(dates, function(value, date){
-                var hour = new Date(date).getHours()
-                res[slot] = res[slot] || {}
-                
-                // hour is zero ?
-                // slot is undefined ? 
-                res[slot][date] = Number((value / averageData[slot][hour] * 100).toFixed(2))
-            })
+            if (slot < 20) {
+              _.each(dates, function(value, date){
+                  var hour = new Date(date).getHours()
+                  res[slot] = res[slot] || {}
+                  
+                  // hour is zero ?
+                  // slot is undefined ? 
+                  res[slot][date] = Number((value / averageData[slot][hour] * 100).toFixed(2))
+              })
+            }
           })
           
           
           $('.pageViewsSlotDiv').removeClass('hidden')
           var graphData = {}
           var tableData = {}
-          debugger
           _.each(res, function(dateObjs, series){
             [graphData[series], tableData[series]] = filterData(dateObjs, ' ')
           })
-          debugger
           var $chart = $('.pageViewsSlotChart').MPChart({
             highchartsOptions: highChartsConfig,
             chartType: 'line',
