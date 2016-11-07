@@ -97,7 +97,7 @@
       var utcToEst = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
 
       // var params = { 
-      //   from: new Date(utcToEst - 1000 * 3600 * 24 * 30).toISOString().split('T')[0],
+      //   from: new Date(utcToEst - 1000 * 3600 * 24 * 20).toISOString().split('T')[0],
       //   to: utcToEst.toISOString().split('T')[0],
       // }
       
@@ -105,13 +105,14 @@
         return Events({
           from_date: params.from,
           to_date:   params.to,
-          event_selectors: [{event: 'Page View', selector:'defined (properties["Referrer Slot"]) and defined (properties["Referrer Position"]) and (properties["Edition Name"] == "English / United States") and defined (properties["Story Headline"])'}]
+          event_selectors: [{event: 'Page View', selector:'defined (properties["Referrer Slot"]) and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] == "Home Page") and (properties["Edition Name"] == "English / United States") and defined (properties["Referrer Position"]) and (properties["Referrer Is Headline"] == "FALSE") and defined (properties["Story Headline"])'}]
         })
+        .filter(dayOfWeek)
         .groupBy([stringSlot, getHour], mixpanel.reducer.count())
         .map(item => {
           var res = {}
           res.key = item.key
-          res.value = (item.value / ((new Date(params.to)  - new Date(params.from)) / (36e5 * 24))).toFixed()
+          res.value = (item.value / ( (new Date(params.to)  - new Date(params.from)) / (36e5 * 24 * 7) ) ).toFixed()
           return res
         })
         .reduce((accs,items) => {
@@ -136,6 +137,11 @@
       function getHour(event){
         return new Date(event.time).getHours()
       }
+      
+      function dayOfWeek(event){
+        return utcToEst.getDay() == new Date(event.time).getDay()
+      }
+      
       function stringSlot(event){
         return String(event.properties["Referrer Slot"])
       }
