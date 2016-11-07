@@ -223,9 +223,8 @@
           var averageData = dataArray[1][0]
           debugger
           var graphData = {}
-          var data = []
+          var res = {}
           _.each(todayData, function(dates, slot){
-            var res = {}
             _.each(dates, function(value, date){
                 var hour = new Date(date).getHours()
                 res[slot] = res[slot] || {}
@@ -234,7 +233,6 @@
                 // slot is undefined ? 
                 res[slot][date] = (value / averageData[slot][hour] * 100).toFixed(2)
             })
-            data.push(res)
           })
           
           
@@ -242,7 +240,7 @@
           var graphData = {}
           var tableData = {}
           debugger
-          _.each(data, function(dateObjs, series){
+          _.each(res, function(dateObjs, series){
             [graphData[series], tableData[series]] = filterData(dateObjs, ' ')
           })
           debugger
