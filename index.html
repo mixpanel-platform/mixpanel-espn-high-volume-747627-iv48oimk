@@ -107,7 +107,7 @@
           to_date:   params.to,
           event_selectors: [{event: 'Page View', selector:'defined (properties["Referrer Slot"]) and defined (properties["Referrer Position"]) and (properties["Edition Name"] == "English / United States") and defined (properties["Story Headline"])'}]
         })
-        .groupBy(["properties.Referrer Slot", getHour], mixpanel.reducer.count())
+        .groupBy([stringSlot, getHour], mixpanel.reducer.count())
         .map(item => {
           var res = {}
           res.key = item.key
@@ -135,6 +135,9 @@
       
       function getHour(event){
         return new Date(event.time).getHours()
+      }
+      function stringSlot(event){
+        return String(event.properties["Referrer Slot"])
       }
     </script>
     <script>
@@ -210,7 +213,7 @@
         
         var pageViewAverageParams = {
           to: new Date().toISOString().split('T')[0],
-          from: new Date(new Date() - 60 * 60 * 1000 * 24 * 30).toISOString().split('T')[0],
+          from: new Date(new Date() - 60 * 60 * 1000 * 24 * 120).toISOString().split('T')[0],
           os: 'desktop'
         }
         
