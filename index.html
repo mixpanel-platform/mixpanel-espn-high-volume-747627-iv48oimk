@@ -130,7 +130,6 @@
           })
           return res
         })
-        // .filter(item => item.key[0] == 1)
       }
       
       
@@ -228,12 +227,12 @@
           _.each(todayData, function(dates, slot){
             var res = {}
             _.each(dates, function(value, date){
-                var y = new Date(new Date - 36e5 * 24)
-                var yStringDay = [y.getFullYear(), pad(y.getMonth() + 1, 2), pad(y.getDate(), 2)].join("-")
-                var yStringTime = date.split(' ')[1]
-                var yString = yStringDay + " " + yStringTime
+                var hour = new Date(date).getHours()
                 res[slot] = res[slot] || {}
-                res[slot][date] = value - yesterdayData[slot][yString]
+                
+                // hour is zero ?
+                // slot is undefined ? 
+                res[slot][date] = ((value + averageData[slot][hour]) / averageData[slot][hour] * 100).toFixed(2)
             })
             data.push(res)
           })
