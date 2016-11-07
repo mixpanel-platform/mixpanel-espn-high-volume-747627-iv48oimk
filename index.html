@@ -254,7 +254,8 @@
           var graphData = {}
           var tableData = {}
           _.each(res, function(dateObjs, series){
-            [graphData[series], tableData[series]] = filterData(dateObjs, ' ')
+            graphData[series] = filterGraphData(dateObjs, ' ') 
+            tableData[series] = filterTableData(dateObjs, ' ', averageData[series])
           })
           var $chart = $('.pageViewsSlotChart').MPChart({
             highchartsOptions: highChartsConfig,
@@ -336,14 +337,20 @@
       //   });
       }      
       
-      function filterData(dateObjs, seperator){
+      function filterGraphData(dateObjs, seperator){
         var dateObj = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
         var graphData = _.pick(dateObjs, function(v,date) { 
           if (new Date(date.replace('T', ' ')) > dateObj - (1000 * 60 * 60 * 8) && new Date(date.replace('T', ' ')) < dateObj){
             return true
           }
         })  
-        
+        return graphData
+      }
+      
+      function filterTableData(dateObjs, seperator, averageData){
+        debugger
+        var dateObj = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
+       
         var currHour = seperator + pad(dateObj.getHours(),2) + ':00:00'
         var currDay = dateObj.getFullYear() + '-' + pad((dateObj.getMonth() + 1),2) + '-' + pad(dateObj.getDate(),2) + currHour
         var lastDateObj = new Date(new Date() - (1000 * 60 * 60 * 24))
@@ -361,7 +368,7 @@
           'Percent Last Week': percentLastWeek,
           'Last Week': dateObjs[lastWeek] || 0
         }
-        return [graphData, tableData]
+        return tableData
       }
   
       
