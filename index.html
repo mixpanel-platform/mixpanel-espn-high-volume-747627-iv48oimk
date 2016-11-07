@@ -237,14 +237,14 @@
           var graphData = {}
           var res = {}
           _.each(todayData, function(dates, slot){
-            if (slot < 20) {
+            if (slot <= 20) {
               _.each(dates, function(value, date){
                   var hour = new Date(date).getHours()
                   res[slot] = res[slot] || {}
                   
                   // hour is zero ?
                   // slot is undefined ? 
-                  res[slot][date] = Number(((value - averageData[slot][hour]) / averageData[slot][hour] * 100).toFixed(2))
+                  res[slot][date] = Math.log10(Number(((value - averageData[slot][hour]) / averageData[slot][hour] * 100).toFixed(2)))
               })
             }
           })
