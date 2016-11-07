@@ -221,7 +221,7 @@
         
         Promise.all([$pastPageViewsSlotToday,$pastPageViewsSlotAverage]).then(function(dataArray){
           var todayData = dataArray[0].json
-          var yesterdayData = dataArray[1].json
+          var averageData = dataArray[1][0]
           debugger
           var graphData = {}
           var data = []
