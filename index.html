@@ -230,6 +230,8 @@
         Promise.all([$pastPageViewsSlotToday,$pastPageViewsSlotAverage]).then(function(dataArray){
           var todayData = dataArray[0].json
           var averageData = dataArray[1][0]
+          console.log(todayData)
+          console.log(averageData)
           var graphData = {}
           var res = {}
           _.each(todayData, function(dates, slot){
