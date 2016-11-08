@@ -242,7 +242,8 @@
                   // hour is zero ?
                   // slot is undefined ? 
                   debugger
-                  new Date(date).toISOString().split(":")[0] == new Date().toISOString().split(":")[0]
+                  a = new Date(date).toISOString().split(":")[0] == new Date().toISOString().split(":")[0]
+                  console.log(a)
                   res[slot][date] = Number(((value - (averageData[slot][hour]) / averageData[slot][hour] * 100).toFixed(2)))
               })
             }
