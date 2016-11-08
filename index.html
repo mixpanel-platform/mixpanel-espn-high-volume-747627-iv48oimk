@@ -241,7 +241,7 @@
                   var hourAvg = averageData[slot][hour]
                   // hour is zero ?
                   // slot is undefined ? 
-                  var utcDate = new Date( new Date().getTime() + new Date(date).getTimezoneOffset() * 6000)
+                  var utcDate = new Date( new Date().getTime() + new Date(date).getTimezoneOffset() * 6000).toLocaleString()
                   if (utcDate.split(":")[0] == utcToEst.toLocaleString().split(":")[0]) {
                     debugger
                     
