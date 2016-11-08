@@ -241,8 +241,11 @@
                   var hourAvg = averageData[slot][hour]
                   // hour is zero ?
                   // slot is undefined ? 
-                  if (new Date(date).toISOString().split(":")[0] == new Date().toISOString().split(":")[0]) {
+                  var utcDate = new Date(date).toLocaleString("en-US", {timeZone: "America/New_York"})
+                  if (utcDate.split(":")[0] == utcToEst.toLocaleString().split(":")[0]) {
                     debugger
+                    
+                    // so this is not taking into account tz difference between the two
                     hourAvg = hourAvg / 60 * new Date().getMinutes()
                   }
                   res[slot][date] = Number(((value - hourAvg) / hourAvg * 100).toFixed(2))
