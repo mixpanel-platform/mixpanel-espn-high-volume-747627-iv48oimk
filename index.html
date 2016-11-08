@@ -241,7 +241,7 @@
                   
                   // hour is zero ?
                   // slot is undefined ? 
-                  res[slot][date] = Number(((value - (averageData[slot][hour])/ 60 * new Date().getMinutes()) / (averageData[slot][hour]/ 60 * new Date().getMinutes()) * 100).toFixed(2))
+                  res[slot][date] = Number(((value - (averageData[slot][hour]) / averageData[slot][hour] * 100).toFixed(2))
               })
             }
           })
@@ -260,7 +260,7 @@
             data: graphData
           })
           
-        //   $pageViewsSlotTable.clear()
+          $pageViewsSlotTable.clear()
           
           _.each(tableData, function(vals, slot){
             var row = _.extend({'name': slot}, vals)
