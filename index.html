@@ -244,7 +244,7 @@
                   if (new Date(date).toISOString().split(":")[0] == new Date().toISOString().split(":")[0]) {
                     debugger
                   }
-                  res[slot][date] = Number(((value - (averageData[slot][hour]) / averageData[slot][hour] * 100).toFixed(2)))
+                  res[slot][date] = Number(((value - (averageData[slot][hour])) / averageData[slot][hour] * 100).toFixed(2))
               })
             }
           })
