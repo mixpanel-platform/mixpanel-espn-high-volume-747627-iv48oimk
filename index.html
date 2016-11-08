@@ -242,7 +242,7 @@
                   // hour is zero ?
                   // slot is undefined ? 
                   debugger
-                  var utcDate = new Date( new Date().getTime() + new Date(date).getTimezoneOffset() * 6000).toLocaleString()
+                  var utcDate = new Date( new Date(date).getTime() + new Date(date).getTimezoneOffset() * 6000).toLocaleString()
                   if (utcDate.split(":")[0] == utcToEst.toLocaleString().split(":")[0]) {
                     // so this is not taking into account tz difference between the two
                     hourAvg = hourAvg / 60 * new Date().getMinutes()
