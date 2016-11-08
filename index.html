@@ -153,9 +153,8 @@
       var $pageViewsSlotTable = $('.pageViewsSlotTable').DataTable( {
             columns: [
                 { title: 'Slot', data: 'name' },
-                { title: 'Current Hour', data: 'Current Hour' },
+                { title: 'Current Hour Trend', data: 'Current Hour' }
                 { title: 'Average', data: 'average' },
-                { title: 'Above Baseline', data: 'baseline'},
             ]
         });
         
@@ -349,18 +348,11 @@
       
       function filterTableData(dateObjs, seperator, averageData){
         var dateObj = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
-        var betterThenBaseline = 0
-        _.each(dateObjs, function(v,date) { 
-          if (new Date(date.replace('T', ' ')) > dateObj - (1000 * 60 * 60 * 8) && new Date(date.replace('T', ' ')) < dateObj){
-            if (v >= -10) betterThenBaseline++
-          }
-        }) 
         var currHour = seperator + pad(dateObj.getHours(),2) + ':00:00'
         var currDay = dateObj.getFullYear() + '-' + pad((dateObj.getMonth() + 1),2) + '-' + pad(dateObj.getDate(),2) + currHour
         var tableData = {
           'Current Hour': dateObjs[currDay] || 0,
           'average': averageData[dateObj.getHours()],
-          'baseline' : betterThenBaseline,
         }
         return tableData
       }
