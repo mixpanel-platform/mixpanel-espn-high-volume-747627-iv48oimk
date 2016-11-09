@@ -247,7 +247,9 @@
                   console.log(date)
                   console.log(utcToEst)
                   if (utcDate.split(":")[0] == utcToEst.toLocaleString().split(":")[0]) {
-                    // so this is not taking into account tz difference between the two
+                    console.log("Extrapolating for time")// so this is not taking into account tz difference between the two
+                    
+                    
                     hourAvg = hourAvg / 60 * new Date().getMinutes()
                   }
                   res[slot][date] = Number(((value - hourAvg) / hourAvg * 100).toFixed(2))
