@@ -208,7 +208,6 @@
               }
             }
         var utcToEst = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
-        debugger
         var pageViewSlotTodayParams = {
           where: 'defined (properties["Referrer Slot"]) and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] == "Home Page") and (properties["Edition Name"] == "English / United States") and defined (properties["Referrer Position"]) and (properties["Referrer Is Headline"] == "FALSE") and defined (properties["Story Headline"])',
           on: 'properties["Referrer Slot"]',
@@ -248,8 +247,6 @@
                   console.log(utcToEst)
                   if (utcDate.split(":")[0] == utcToEst.toLocaleString().split(":")[0]) {
                     console.log("Extrapolating for time")// so this is not taking into account tz difference between the two
-                    
-                    
                     hourAvg = hourAvg / 60 * new Date().getMinutes()
                   }
                   res[slot][date] = Number(((value - hourAvg) / hourAvg * 100).toFixed(2))
