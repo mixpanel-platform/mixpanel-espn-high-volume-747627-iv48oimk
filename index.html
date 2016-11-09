@@ -213,7 +213,7 @@
           where: 'defined (properties["Referrer Slot"]) and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] == "Home Page") and (properties["Edition Name"] == "English / United States") and defined (properties["Referrer Position"]) and (properties["Referrer Is Headline"] == "FALSE") and defined (properties["Story Headline"])',
           on: 'properties["Referrer Slot"]',
           to_date: new Date().toISOString().split('T')[0],
-          from_date: new Date().toISOString().split('T')[0],
+          from_date: new Date(new Date() - 60 * 60 * 1000 * 24).toISOString().split('T')[0],
           limit: 500,
           unit: "hour"
         }
