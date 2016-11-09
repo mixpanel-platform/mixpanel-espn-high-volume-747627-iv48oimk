@@ -245,6 +245,7 @@
                   console.log(hour)
                   console.log(utcDate)
                   console.log(date)
+                  console.log(utcToEst)
                   if (utcDate.split(":")[0] == utcToEst.toLocaleString().split(":")[0]) {
                     // so this is not taking into account tz difference between the two
                     hourAvg = hourAvg / 60 * new Date().getMinutes()
