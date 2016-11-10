@@ -352,11 +352,12 @@
           
           $('.pageViewsSlotDiv').removeClass('hidden')
           var tableData = {}
-          var lastSlots = {}
+          var lastSlot = {}
           _.each(res, function(slotStory) {
             var slot = slotStory.slot
             tableData[slot] = tableData[slot] || {}
-            if (slotStory.storyNumber > lastSlot[slotStory.slot]) {
+            if (slotStory.storyNumber > lastSlot[slot]) {
+              lastSlot[slot] = slotStory.storyNumber
               var time = slotStory.data[slotStory.data.length - 1]["x"]
               var val = slotStory.data[slotStory.data.length - 1]["y"]
               var hour = new Date(time).getHours()
