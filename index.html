@@ -326,13 +326,14 @@
         
         Promise.all([$pastPageViewsSlotToday,$pastPageViewsSlotAverage]).then(function(dataArray){
           debugger
-          var todayData = dataArray[0].json
+          var todayData = _.flatten(dataArray[0])
           var averageData = dataArray[1][0]
           console.log(todayData)
           console.log(averageData)
           var graphData = {}
           var res = {}
           _.each(todayData, function(dates, slot){
+            // this block is broke
             if (slot <= 20) {
               _.each(dates, function(value, date){
                   var hour = new Date(date).getHours()
