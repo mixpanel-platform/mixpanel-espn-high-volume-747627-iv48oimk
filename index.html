@@ -362,7 +362,7 @@
                   console.log("Extrapolating for time")// so this is not taking into account tz difference between the two
                   hourAvg = hourAvg / 60 * new Date().getMinutes()
                 }
-                if (hourAvg == 0) {debugger}
+                if (hourAvg == 0) { hourAvg = value.y}
                 if (value.y/hourAvg > 1000) {debugger}
                 
                 tmp.data[idx]['y'] = Number(((value.y - hourAvg) / hourAvg * 100).toFixed(2))
