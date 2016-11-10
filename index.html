@@ -146,6 +146,107 @@
         return String(event.properties["Referrer Slot"])
       }
     </script>
+    
+    <script id="segmentationBySlotStory">
+       var utcToEst = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
+
+      // var params = { 
+      //   from: new Date(utcToEst - 1000 * 3600 * 8).toISOString().split('T')[0],
+      //   to: utcToEst.toISOString().split('T')[0],
+      // }
+      
+      function main() {
+        return Events({
+          from_date: params.from,
+          to_date:   params.to,
+          event_selectors: [{event: 'Page View', selector:'defined (properties["Referrer Slot"]) and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] == "Home Page") and (properties["Edition Name"] == "English / United States") and defined (properties["Referrer Position"]) and (properties["Referrer Is Headline"] == "FALSE") and defined (properties["Story Headline"])'}]
+        })
+        .filter(eightHours)
+        .filter(item => stringSlot(item) <= 20)
+        // .groupBy([stringSlot, getHour, 'properties.Story Headline'], mixpanel.reducer.count())
+        .groupBy([stringSlot], (accs, items) => {
+          var res = {}
+          _.each(items, item => {
+            var hour = getHour(item)
+            res[hour] = res[hour] || {}
+            res[hour][item.properties["Story Headline"]] = res[hour][item.properties["Story Headline"]] + 1 || 1
+          })
+          _.each(accs, acc => {
+            _.each(acc, (v,k) => {
+              _.each(v, (count, story) => {
+               res[k] = res[k] || {}
+               res[k][story] = res[k][story] + count || count 
+              })    
+            })
+          })
+          return res
+        })
+        .map(item => {
+          var res = {}
+          res.key = item.key
+          res.value = {}
+          _.each(item.value, (storyVals, hour) => {
+            // test for handoff / new story
+            var maxStory = undefined
+            var maxCount = 0
+            _.each(storyVals, (val, story) => {
+              if (val > maxCount) {
+                maxCount = val
+                maxStory = story
+              }
+            })
+            res.value[hour] = {story: maxStory, value: maxCount}
+          })
+          return res
+        })
+        // now test for story changes to handle the count and the joined data points
+        .map(item => {
+          var res = []
+          var slot = item.key[0]
+          var previousStory = undefined
+          var storyNumber = 0
+          var tmp = {data: []}
+          _.each(item.value, (storyVals, hour) =>{
+            tmp = tmp || {data: []}            
+            if (previousStory !== storyVals.story) {
+              previousStory = storyVals.story
+              storyNumber ++ 
+              if(tmp.slot){
+                tmp.data.push({x: new Date(utcToEst).setHours(Number(hour)), y:storyVals.value})
+                res.push(tmp)
+              }
+              tmp = {}
+              tmp.slot = slot
+              tmp.storyNumber = storyNumber
+              tmp.name = storyVals.story
+              tmp.data = []
+            }
+            tmp.data.push({x: new Date(utcToEst).setHours(Number(hour)), y:storyVals.value})
+          })
+          
+          return res
+        })
+        
+        
+      }
+      
+      
+      function getHour(event){
+        return new Date(event.time).getHours()
+      }
+      
+      function dayOfWeek(event){
+        return utcToEst.getDay() == new Date(event.time).getDay()
+      }
+      
+      function eightHours(event){
+        return new Date(utcToEst - 1000 * 3600 * 8) < event.time
+      }
+      
+      function stringSlot(event){
+        return String(event.properties["Referrer Slot"])
+      }
+    </script>
     <script>
       // Use Data tables for better sorting/limiting etc
        /* slot page views */
@@ -208,13 +309,10 @@
               }
             }
         var utcToEst = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
+        
         var pageViewSlotTodayParams = {
-          where: 'defined (properties["Referrer Slot"]) and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] == "Home Page") and (properties["Edition Name"] == "English / United States") and defined (properties["Referrer Position"]) and (properties["Referrer Is Headline"] == "FALSE") and defined (properties["Story Headline"])',
-          on: 'properties["Referrer Slot"]',
           to_date: new Date().toISOString().split('T')[0],
-          from_date: new Date(new Date() - 60 * 60 * 1000 * 24).toISOString().split('T')[0],
-          limit: 500,
-          unit: "hour"
+          from_date: new Date(new Date() - 60 * 60 * 1000 * 8).toISOString().split('T')[0],
         }
         
         var pageViewAverageParams = {
@@ -223,11 +321,11 @@
           os: 'desktop'
         }
         
-        var $pastPageViewsSlotToday = MP.api.segment('Page View', pageViewSlotTodayParams)
-        var averageQuery = $('#averageQuery').html()
-        var $pastPageViewsSlotAverage = MP.api.jql(averageQuery, pageViewAverageParams)
+        var $pastPageViewsSlotToday = MP.api.jql($('#segmentationQuery').html(), pageViewSlotTodayParams)
+        var $pastPageViewsSlotAverage = MP.api.jql($('#averageQuery').html(), pageViewAverageParams)
         
         Promise.all([$pastPageViewsSlotToday,$pastPageViewsSlotAverage]).then(function(dataArray){
+          debugger
           var todayData = dataArray[0].json
           var averageData = dataArray[1][0]
           console.log(todayData)
