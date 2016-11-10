@@ -354,19 +354,21 @@
             var tmp = _.clone(valObj)
             tmp.data = _.clone(valObj.data)
             var hours = {}
+            var hourAvgs = {}
+            var time, hourAvg, utcDate
             _.each(valObj.data, function(value, idx){
-                var time = value.x
+                time = value.x
                 hours[idx] = new Date(time).getHours()
-                var hourAvg = averageData[slot][hours[idx]]
-                var utcDate = new Date( new Date(time).getTime() + new Date(time).getTimezoneOffset() * 6000).toLocaleString()
+                hourAvgs[idx] = averageData[slot][hours[idx]]
+                utcDate = new Date( new Date(time).getTime() + new Date(time).getTimezoneOffset() * 6000).toLocaleString()
                 if (utcDate.split(":")[0] == utcToEst.toLocaleString().split(":")[0]) {
                   console.log("Extrapolating for time")// so this is not taking into account tz difference between the two
-                  hourAvg = hourAvg / 60 * new Date().getMinutes()
+                  hourAvgs[idx] = hourAvgs[idx] / 60 * new Date().getMinutes()
                 }
-                if (hourAvg == 0) { hourAvg = value.y}
-                if (value.y/hourAvg > 1000) {debugger}
+                if (hourAvg == 0) { hourAvgs[idx] = value.y}
+                if (value.y/hourAvgs[idx] > 1000) {debugger}
                 
-                tmp.data[idx]['y'] = (value.y - hourAvg) / hourAvg * 100
+                tmp.data[idx]['y'] = (value.y - hourAvgs[idx]) / hourAvgs[idx] * 100
                 if (tmp.data[idx]['y'] > 80000) {debugger}
             })
             res.push(tmp)
