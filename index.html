@@ -366,6 +366,7 @@
                 if (value.y/hourAvg > 1000) {debugger}
                 
                 tmp.data[idx]['y'] = Number(((value.y - hourAvg) / hourAvg * 100).toFixed(2))
+                if (tmp.data[idx]['y'] > 1000) {debugger}
             })
             res.push(tmp)
           })
