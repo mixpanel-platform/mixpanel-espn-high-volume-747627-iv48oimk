@@ -356,7 +356,7 @@
             var hours = {}
             _.each(valObj.data, function(value, idx){
                 var time = value.x
-                var hours[idx] = new Date(time).getHours()
+                hours[idx] = new Date(time).getHours()
                 var hourAvg = averageData[slot][hours[idx]]
                 var utcDate = new Date( new Date(time).getTime() + new Date(time).getTimezoneOffset() * 6000).toLocaleString()
                 if (utcDate.split(":")[0] == utcToEst.toLocaleString().split(":")[0]) {
