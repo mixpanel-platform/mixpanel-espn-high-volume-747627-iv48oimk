@@ -354,7 +354,6 @@
           var tableData = {}
           var lastSlot = {}
           _.each(res, function(slotStory) {
-            debugger
             var slot = slotStory.slot
             tableData[slot] = tableData[slot] || {}
             if (!lastSlot[slot] || slotStory.storyNumber > lastSlot[slot]) {
@@ -367,6 +366,7 @@
               tableData[slot]["average"] = hourAvg
             }
           })
+          debugger
           
           // function(dateObjs, series){
           //   debugger
