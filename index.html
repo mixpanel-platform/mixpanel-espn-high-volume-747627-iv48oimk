@@ -340,13 +340,8 @@
             _.each(tmp.data, function(value, idx){
                 var time = value.x
                 var hour = new Date(time).getHours()
-                res[slot] = res[slot] || {}
                 var hourAvg = averageData[slot][hour]
                 var utcDate = new Date( new Date(time).getTime() + new Date(time).getTimezoneOffset() * 6000).toLocaleString()
-                console.log(hour)
-                console.log(utcDate)
-                console.log(time)
-                console.log(utcToEst)
                 if (utcDate.split(":")[0] == utcToEst.toLocaleString().split(":")[0]) {
                   console.log("Extrapolating for time")// so this is not taking into account tz difference between the two
                   hourAvg = hourAvg / 60 * new Date().getMinutes()
@@ -355,9 +350,8 @@
                 tmp.data[idx]['y'] = Number(((value.y - hourAvg) / hourAvg * 100).toFixed(2))
             })
             res.push(tmp)
-            debugger
           })
-          
+          debugger
           
           $('.pageViewsSlotDiv').removeClass('hidden')
           var graphData = {}
