@@ -1,5 +1,5 @@
 .section {
-	padding: 20px;
+    padding: 20px;
     margin-bottom: 30px;
     background: #fbfcfd;
     border-radius: 4px;
@@ -7,4 +7,12 @@
     -webkit-box-shadow: 0px 1px 6px -3px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 1px 6px -3px rgba(0,0,0,0.75);
     box-shadow: 0px 1px 6px -3px rgba(0,0,0,0.75);
+}
+
+.report-filter-dropdown {
+    display: inline-block;	
+}
+
+.report-slot-range-dropdown {
+    display: inline-block;	
 }
