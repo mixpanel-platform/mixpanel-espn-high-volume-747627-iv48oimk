@@ -551,6 +551,7 @@
         // Aggregate any slots within the range
         for (var i = 0; i < pageViewsSlotData.length; i++) {
           var pageViewData = pageViewsSlotData[i];
+          console.log(pageViewData.slot);
           if (pageViewData.slot >= lowerBound || pageViewData.slot <= upperBound) {
             dataSet.push(pageViewData);
           }
