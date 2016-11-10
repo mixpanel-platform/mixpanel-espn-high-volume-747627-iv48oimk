@@ -369,7 +369,7 @@
                 if (value.y/hourAvgs[idx] > 1000) {debugger}
                 
                 tmp.data[idx]['y'] = (value.y - hourAvgs[idx]) / hourAvgs[idx] * 100
-                if (tmp.data[idx]['y'] > 80000) {debugger}
+                if (tmp.data[idx]['y'] == 32840) {debugger}
             })
             res.push(tmp)
           })
