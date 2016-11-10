@@ -542,6 +542,8 @@
         
         // Grab set of 5 slots based on range from dropdown
         var dataSet = pageViewsSlotData.slice(lowerBound, upperBound);
+        console.log('subset is:');
+        console.log(dataSet);
         
         // Assign colors to data
         insertColors(dataSet);
