@@ -386,12 +386,15 @@
           })
           debugger
           // SB UI code
-          var $chart = $('.pageViewsSlotChart').MPChart({
+          pageViewsSlotData = res;
+          
+          /*var $chart = $('.pageViewsSlotChart').MPChart({
             highchartsOptions: highChartsConfig,
             chartType: 'line',
             data: res
-          })
+          })*/
           
+          renderSlotPerformanceChart(slotRange);
           // End SB UI code
           
           $pageViewsSlotTable.clear()
