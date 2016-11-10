@@ -254,7 +254,7 @@
       var $pageViewsSlotTable = $('.pageViewsSlotTable').DataTable( {
             columns: [
                 { title: 'Slot', data: 'name' },
-                { title: 'Current Hour Trend', data: 'Current Hour' },
+                { title: 'Current Hour Trend', data: 'trend' },
                 { title: 'Average', data: 'average' },
             ]
         });
@@ -352,11 +352,25 @@
           
           $('.pageViewsSlotDiv').removeClass('hidden')
           var tableData = {}
-          _.each(res, function(dateObjs, series){
-            debugger
-            // need the current table hour and slot for the table
-            tableData[series] = filterTableData(dateObjs, ' ', averageData[series])
+          var lastSlots = {}
+          _.each(res, function(slotStory) {
+            var slot = slotStory.slot
+            tableData[slot] = tableData[slot] || {}
+            if (slotStory.storyNumber > lastSlot[slotStory.slot]) {
+              var time = slotStory.data[slotStory.data.length - 1]["x"]
+              var val = slotStory.data[slotStory.data.length - 1]["y"]
+              var hour = new Date(time).getHours()
+              var hourAvg = averageData[slot][hour]
+              tableData[slot]["Trend"] = val
+              tableData[slot]["average"] = hourAvg
+            }
           })
+          debugger
+          // function(dateObjs, series){
+          //   debugger
+          //   // need the current table hour and slot for the table
+          //   tableData[series] = filterTableData(dateObjs, ' ', averageData[series])
+          // })
           var $chart = $('.pageViewsSlotChart').MPChart({
             highchartsOptions: highChartsConfig,
             chartType: 'line',
