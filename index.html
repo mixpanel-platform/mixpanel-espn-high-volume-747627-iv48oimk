@@ -41,6 +41,15 @@
       <table id="table" class="display pageViewsIndexTable" width="100%"></table>
     </div>
     
+    <script id="state">
+      // Data for color-gradient slot & story performance
+      var pageViewsSlotData = {};
+      
+      // Slot range to display on chart
+      var slotRange = '1 5';
+      
+    </script>
+    
     <script id='multiseg'>
       var utcToEst = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
       function main() {
@@ -376,11 +385,14 @@
             }
           })
           debugger
+          // SB UI code
           var $chart = $('.pageViewsSlotChart').MPChart({
             highchartsOptions: highChartsConfig,
             chartType: 'line',
             data: res
           })
+          
+          // End SB UI code
           
           $pageViewsSlotTable.clear()
           
