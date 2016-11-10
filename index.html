@@ -386,6 +386,11 @@
           })
           debugger
           // SB UI code
+          // Sort returned data by increasing slot number
+          res.sort(function(a, b) {
+              return (a['slot'] - b['slot']);
+          });
+          
           pageViewsSlotData = res;
           
           /*var $chart = $('.pageViewsSlotChart').MPChart({
