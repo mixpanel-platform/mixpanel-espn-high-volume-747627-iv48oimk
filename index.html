@@ -350,6 +350,7 @@
           var graphData = {}
           var res = []
           _.each(todayData, function(valObj){
+            console.log(valObj)
             var slot = valObj.slot
             var tmp = _.clone(valObj)
             tmp.data = _.clone(valObj.data)
