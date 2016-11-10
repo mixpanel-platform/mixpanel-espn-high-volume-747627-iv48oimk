@@ -329,8 +329,8 @@
         var utcToEst = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
         
         var pageViewSlotTodayParams = {
-          to: new Date().toISOString().split('T')[0],
-          from: new Date(new Date() - 60 * 60 * 1000 * 24 * 8).toISOString().split('T')[0],
+          from: new Date(utcToEst - 1000 * 3600 * 8).toISOString().split('T')[0],
+          to: utcToEst.toISOString().split('T')[0],
         }
         
         var pageViewAverageParams = {
