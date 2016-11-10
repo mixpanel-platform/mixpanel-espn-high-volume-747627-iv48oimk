@@ -331,26 +331,30 @@
           console.log(todayData)
           console.log(averageData)
           var graphData = {}
-          var res = {}
-          _.each(todayData, function(dates, slot){
+          var res = []
+          _.each(todayData, function(valObj){
             // this block is broke
-            if (slot <= 20) {
-              _.each(dates, function(value, date){
-                  var hour = new Date(date).getHours()
-                  res[slot] = res[slot] || {}
-                  var hourAvg = averageData[slot][hour]
-                  var utcDate = new Date( new Date(date).getTime() + new Date(date).getTimezoneOffset() * 6000).toLocaleString()
-                  console.log(hour)
-                  console.log(utcDate)
-                  console.log(date)
-                  console.log(utcToEst)
-                  if (utcDate.split(":")[0] == utcToEst.toLocaleString().split(":")[0]) {
-                    console.log("Extrapolating for time")// so this is not taking into account tz difference between the two
-                    hourAvg = hourAvg / 60 * new Date().getMinutes()
-                  }
-                  res[slot][date] = Number(((value - hourAvg) / hourAvg * 100).toFixed(2))
-              })
-            }
+            var slot = valObj.slot
+            var tmp = _.clone(valObj)
+            var tmp.data = _.clone(valObj.data)\
+            _.each(tmp.data, function(value){
+                var time = value.x
+                var hour = new Date(time).getHours()
+                res[slot] = res[slot] || {}
+                var hourAvg = averageData[slot][hour]
+                var utcDate = new Date( new Date(time).getTime() + new Date(time).getTimezoneOffset() * 6000).toLocaleString()
+                console.log(hour)
+                console.log(utcDate)
+                console.log(time)
+                console.log(utcToEst)
+                if (utcDate.split(":")[0] == utcToEst.toLocaleString().split(":")[0]) {
+                  console.log("Extrapolating for time")// so this is not taking into account tz difference between the two
+                  hourAvg = hourAvg / 60 * new Date().getMinutes()
+                }
+                // Number(((value.y - hourAvg) / hourAvg * 100).toFixed(2))
+                // tmp.data.va
+                // res.push(tmp) =
+            })
           })
           
           
