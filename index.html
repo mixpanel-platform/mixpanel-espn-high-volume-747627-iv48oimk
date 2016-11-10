@@ -202,7 +202,7 @@
         // now test for story changes to handle the count and the joined data points
         .map(item => {
           var res = []
-          var slot = item.key[0]
+          var slot = Number(item.key[0])
           var previousStory = undefined
           var storyNumber = 0
           var tmp = {data: []}
