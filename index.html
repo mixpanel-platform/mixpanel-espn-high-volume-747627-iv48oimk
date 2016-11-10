@@ -353,7 +353,7 @@
             var slot = valObj.slot
             var tmp = _.clone(valObj)
             tmp.data = _.clone(valObj.data)
-            _.each(tmp.data, function(value, idx){
+            _.each(valObj.data, function(value, idx){
                 var time = value.x
                 var hour = new Date(time).getHours()
                 var hourAvg = averageData[slot][hour]
