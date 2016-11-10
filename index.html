@@ -552,7 +552,7 @@
         for (var i = 0; i < pageViewsSlotData.length; i++) {
           var pageViewData = pageViewsSlotData[i];
           console.log(pageViewData.slot);
-          if (pageViewData.slot >= lowerBound || pageViewData.slot <= upperBound) {
+          if (pageViewData.slot >= lowerBound && pageViewData.slot <= upperBound) {
             console.log('pushing');
             dataSet.push(pageViewData);
           }
