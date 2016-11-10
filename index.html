@@ -357,7 +357,7 @@
             debugger
             var slot = slotStory.slot
             tableData[slot] = tableData[slot] || {}
-            if (slotStory.storyNumber > lastSlot[slot]) {
+            if (!lastSlot[slot] || slotStory.storyNumber > lastSlot[slot]) {
               lastSlot[slot] = slotStory.storyNumber
               var time = slotStory.data[slotStory.data.length - 1]["x"]
               var val = slotStory.data[slotStory.data.length - 1]["y"]
