@@ -360,6 +360,7 @@
             _.each(valObj.data, function(value, idx){
                 time = value.x
                 hours[idx] = new Date(time).getHours()
+                debugger
                 hourAvgs[idx] = averageData[slot][hours[idx]]
                 utcDate = new Date( new Date(time).getTime() + new Date(time).getTimezoneOffset() * 6000).toLocaleString()
                 if (utcDate.split(":")[0] == utcToEst.toLocaleString().split(":")[0]) {
