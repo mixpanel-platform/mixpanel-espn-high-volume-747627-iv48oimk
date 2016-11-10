@@ -325,7 +325,6 @@
         var $pastPageViewsSlotAverage = MP.api.jql($('#averageQuery').html(), pageViewAverageParams)
         
         Promise.all([$pastPageViewsSlotToday,$pastPageViewsSlotAverage]).then(function(dataArray){
-          debugger
           var todayData = _.flatten(dataArray[0])
           var averageData = dataArray[1][0]
           console.log(todayData)
@@ -333,7 +332,6 @@
           var graphData = {}
           var res = []
           _.each(todayData, function(valObj){
-            // this block is broke
             var slot = valObj.slot
             var tmp = _.clone(valObj)
             tmp.data = _.clone(valObj.data)
@@ -351,19 +349,18 @@
             })
             res.push(tmp)
           })
-          debugger
           
           $('.pageViewsSlotDiv').removeClass('hidden')
-          var graphData = {}
           var tableData = {}
           _.each(res, function(dateObjs, series){
-            graphData[series] = filterGraphData(dateObjs, ' ') 
+            debugger
+            // need the current table hour and slot for the table
             tableData[series] = filterTableData(dateObjs, ' ', averageData[series])
           })
           var $chart = $('.pageViewsSlotChart').MPChart({
             highchartsOptions: highChartsConfig,
             chartType: 'line',
-            data: graphData
+            data: res
           })
           
           $pageViewsSlotTable.clear()
