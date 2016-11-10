@@ -337,7 +337,7 @@
             var slot = valObj.slot
             var tmp = _.clone(valObj)
             tmp.data = _.clone(valObj.data)
-            _.each(tmp.data, function(value){
+            _.each(tmp.data, function(value, idx){
                 var time = value.x
                 var hour = new Date(time).getHours()
                 res[slot] = res[slot] || {}
@@ -351,10 +351,11 @@
                   console.log("Extrapolating for time")// so this is not taking into account tz difference between the two
                   hourAvg = hourAvg / 60 * new Date().getMinutes()
                 }
-                // Number(((value.y - hourAvg) / hourAvg * 100).toFixed(2))
-                // tmp.data.va
-                // res.push(tmp) =
+                
+                tmp.data[idx]['y'] = Number(((value.y - hourAvg) / hourAvg * 100).toFixed(2))
             })
+            res.push(tmp)
+            debugger
           })
           
           
