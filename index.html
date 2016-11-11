@@ -372,7 +372,6 @@
             _.each(valObj.data, function(value, idx){
                 time = value.x
                 hours[idx] = new Date(time).getHours()
-                debugger
                 hourAvgs[idx] = averageData[slot][hours[idx]]
                 utcDate = new Date( new Date(time).getTime() + new Date(time).getTimezoneOffset() * 6000).toLocaleString()
                 if (utcDate.split(":")[0] == utcToEst.toLocaleString().split(":")[0]) {
@@ -380,10 +379,8 @@
                   hourAvgs[idx] = hourAvgs[idx] / 60 * new Date().getMinutes()
                 }
                 if (hourAvgs[idx] == 0) { hourAvgs[idx] = value.y}
-                if (value.y/hourAvgs[idx] > 1000) {debugger}
-                
+
                 tmp.data[idx]['y'] = (value.y - hourAvgs[idx]) / hourAvgs[idx] * 100
-                if (tmp.data[idx]['y'] == 32840) {debugger}
             })
             res.push(tmp)
           })
@@ -404,7 +401,6 @@
               tableData[slot]["average"] = hourAvg
             }
           })
-          debugger
           // SB UI code
           // Sort returned data by increasing slot number
           res.sort(function(a, b) {
