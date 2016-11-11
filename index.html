@@ -303,8 +303,7 @@
       
       function Script() { 
         var selector = 'defined (properties["Referrer Slot"]) and (properties["Referring Page"] == "Home Page") and defined (properties["Referrer Position"]) and (properties["Referrer Is Headline"] == "FALSE") and defined (properties["Story Headline"])'
-        debugger
-        
+
         switch (platform) {
           case 'desktop':
             selector += ' and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows")' 
