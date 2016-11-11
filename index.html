@@ -432,68 +432,70 @@
         })
         
         
-      //   /* index page views */
+        /* index page views */
         
-      //   var pageViewIndexParams = {
-      //     where: '(properties["Edition Name"] == "English / United States") and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] != "Home Page") and defined (properties["Referring Page"])',
-      //     on: 'properties["Referring Page"]',
-      //     to_date: utcToEst.toISOString().split('T')[0],
-      //     from_date: new Date(utcToEst - 60 * 60 * 1000 * 24 * 7).toISOString().split('T')[0],
-      //     unit: "hour"
-      //   }
+        var pageViewIndexParams = {
+          where: '(properties["Edition Name"] == "English / United States") and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] != "Home Page") and defined (properties["Referring Page"])',
+          on: 'properties["Referring Page"]',
+          to_date: utcToEst.toISOString().split('T')[0],
+          from_date: new Date(utcToEst - 60 * 60 * 1000 * 24 * 7).toISOString().split('T')[0],
+          unit: "hour"
+        }
         
-      //   var $pastPageViewsIndexData = MP.api.segment('Page View', pageViewIndexParams)
+        var $pastPageViewsIndexData = MP.api.segment('Page View', pageViewIndexParams)
         
-      //   $pastPageViewsIndexData.done(function(data){
-      //     $('.pageViewsIndexDiv').removeClass('hidden')
-      //     var graphData = {}
-      //     var tableData = {}
-      //     _.each(data.json, function(dateObjs, series ){
-      //     [graphData[series], tableData[series]] = filterData(dateObjs, ' ')
-      //     })
-      //     var $chart = $('.pageViewsIndexChart').MPChart({
-      //       highchartsOptions: highChartsConfig,
-      //       chartType: 'line',
-      //       data: graphData
-      //     })
+        $pastPageViewsIndexData.done(function(data){
+          $('.pageViewsIndexDiv').removeClass('hidden')
+          var graphData = {}
+          var tableData = {}
+          _.each(data.json, function(dateObjs, series){
+          graphData[series] = filterGraphData(dateObjs)
+          tableData[series] = filterTableData(dateObjs, ' ')
+          })
+          var $chart = $('.pageViewsIndexChart').MPChart({
+            highchartsOptions: highChartsConfig,
+            chartType: 'line',
+            data: graphData
+          })
           
-      //     $pageViewsIndexTable.clear()
-      //     _.each(tableData, function(vals, index){
-      //       var row = _.extend({'name': index}, vals)
-      //       $pageViewsIndexTable.row.add(row)
-      //     })
-      //     $pageViewsIndexTable.draw();
-      //   })
+          $pageViewsIndexTable.clear()
+          _.each(tableData, function(vals, index){
+            var row = _.extend({'name': index}, vals)
+            $pageViewsIndexTable.row.add(row)
+          })
+          $pageViewsIndexTable.draw();
+        })
         
-      //   /* Slot by story */
-      //   var jqlParams = {
-      //     to: new Date().toISOString().split('T')[0],
-      //     from: new Date(new Date() - 60 * 60 * 1000 * 24 * 7).toISOString().split('T')[0],
-      //     os: 'desktop'
-      //   }
+        /* Slot by story */
+        var jqlParams = {
+          to: new Date().toISOString().split('T')[0],
+          from: new Date(new Date() - 60 * 60 * 1000 * 24 * 7).toISOString().split('T')[0],
+          os: 'desktop'
+        }
         
-      //   var query = $('#multiseg').html()
-      //   MP.api.jql(query,jqlParams).done(function(data){
-      //     $('.slotStoryViewsDiv').removeClass('hidden')
-      //     var graphData = {}
-      //     var tableData = {}
-      //     _.each(data, function(obj){
-      //       [graphData["Slot " + String(obj.slot) + ":Position " + String(obj.position) + ":Story " + String(obj.story)], tableData["Slot " + String(obj.slot) + "~" + String(obj.position) + "~" + String(obj.story)]] = filterData(obj.value, 'T')
-      //     })
-      //     var $chart = $('.slotStoryViewsChart').MPChart({
-      //       highchartsOptions: highChartsConfig,
-      //       chartType: 'line',
-      //       data: graphData
-      //     })
-      //     $slotStoryViewsTable.clear()
-      //     _.each(tableData, function(vals, index){
-      //       // split this to slot, position title
-      //       var [slot, position, title] = index.split('~')
-      //       var row = _.extend({'slot': slot, 'position':position, 'title':title}, vals)
-      //       $slotStoryViewsTable.row.add(row)
-      //     })
-      //     $slotStoryViewsTable.draw();
-      //   });
+        var query = $('#multiseg').html()
+        MP.api.jql(query,jqlParams).done(function(data){
+          $('.slotStoryViewsDiv').removeClass('hidden')
+          var graphData = {}
+          var tableData = {}
+          _.each(data, function(obj){
+            graphData["Slot " + String(obj.slot) + ":Position " + String(obj.position) + ":Story " + String(obj.story)] = filterGraphData(obj.value)
+            tableData["Slot " + String(obj.slot) + "~" + String(obj.position) + "~" + String(obj.story)] = filterTableData(obj.value, 'T')
+          })
+          var $chart = $('.slotStoryViewsChart').MPChart({
+            highchartsOptions: highChartsConfig,
+            chartType: 'line',
+            data: graphData
+          })
+          $slotStoryViewsTable.clear()
+          _.each(tableData, function(vals, index){
+            // split this to slot, position title
+            var [slot, position, title] = index.split('~')
+            var row = _.extend({'slot': slot, 'position':position, 'title':title}, vals)
+            $slotStoryViewsTable.row.add(row)
+          })
+          $slotStoryViewsTable.draw();
+        });
       }      
       
       function filterGraphData(dateObjs, seperator){
