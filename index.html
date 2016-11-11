@@ -553,7 +553,7 @@
       function insertColors(data) {
           for (var i = 0; i < data.length; i++) {
               var currentData = data[i];
-              var dataSlotNumber = (currentData['slot'] - 1) % 5;   // Slot # can be in range [1, 20], this reduces to [0, 4]
+              var dataSlotNumber = (currentData['slot'] - 1) % 4;   // Slot # can be in range [1, 20], this reduces to [0, 4]
               var dataStoryNumber = currentData['storyNumber'];
       
               if (dataStoryNumber >= 5) {
