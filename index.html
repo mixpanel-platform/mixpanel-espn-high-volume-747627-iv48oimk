@@ -6,6 +6,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.css">
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    
+    <script src="js/state.js"></script>
     <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
     <style>
@@ -49,15 +51,6 @@
       <div class="pageViewsIndexChart"></div>
       <table id="table" class="display pageViewsIndexTable" width="100%"></table>
     </div>
-    
-    <script id="state">
-      // Data for color-gradient slot & story performance
-      var pageViewsSlotData = {};
-      
-      // Slot range to display on chart
-      var slotRange = '1 4';
-      
-    </script>
     
     <script id='multiseg'>
       var utcToEst = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
