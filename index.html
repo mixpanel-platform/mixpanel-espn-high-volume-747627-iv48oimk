@@ -16,20 +16,11 @@
   </head>
   <body class="mixpanel-platform-body">
     <div class="section report-header">
-      <div>
-        <h3 class="filter-header">Edition</h3>
-        <div class="report-filter-dropdown"></div>
-      </div>
-      <div>
-        <h3 class="filter-header">Story Slot Range</h3>
-        <div class="report-slot-range-dropdown"></div>
-      </div>
-      <div>
-        <h3 class="filter-header">Platform</h3>
-        <div class="report-platform-switch">
-          <button class="platform-switch-desktop">Desktop</button>
-          <button class="platform-switch-mobile">Mobile</button>
-        </div>
+      <div class="report-filter-dropdown"></div>
+      <div class="report-slot-range-dropdown"></div>
+      <div class="report-platform-switch">
+        <button class="platform-switch-desktop">Desktop</button>
+        <button class="platform-switch-mobile">Mobile</button>
       </div>
     </div>
     <div class="section pageViewsSlotDiv hidden">
@@ -663,24 +654,20 @@
       var slotRangeDropdownOptions = {
         items: [
             {
-              label: '1-4',
-              value: '1 4'
+              label: '1-5',
+              value: '1 5'
             },
             {
-              label: '5-8',
-              value: '5 8'
+              label: '6-10',
+              value: '6 10'
             },
             {
-              label: '9-12',
+              label: '11-15',
               value: '11 15'
             },
             {
-              label: '13-16',
+              label: '16-20',
               value: '16 20'
-            },
-            {
-              label: '17-20',
-              value: '17 20'
             }
           ]
       }
