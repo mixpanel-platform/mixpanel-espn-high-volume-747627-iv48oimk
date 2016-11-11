@@ -439,7 +439,7 @@
           var tableData = {}
           _.each(data.json, function(dateObjs, series){
           graphData[series] = filterGraphData(dateObjs)
-          tableData[series] = filterTableData(dateObjs, ' ')
+          tableData[series] = filterData(dateObjs, ' ')
           })
           var $chart = $('.pageViewsIndexChart').MPChart({
             highchartsOptions: highChartsConfig,
@@ -469,7 +469,7 @@
           var tableData = {}
           _.each(data, function(obj){
             graphData["Slot " + String(obj.slot) + ":Position " + String(obj.position) + ":Story " + String(obj.story)] = filterGraphData(obj.value)
-            tableData["Slot " + String(obj.slot) + "~" + String(obj.position) + "~" + String(obj.story)] = filterTableData(obj.value, 'T')
+            tableData["Slot " + String(obj.slot) + "~" + String(obj.position) + "~" + String(obj.story)] = filterData(obj.value, 'T')
           })
           var $chart = $('.slotStoryViewsChart').MPChart({
             highchartsOptions: highChartsConfig,
@@ -504,6 +504,28 @@
         var tableData = {
           'Current Hour': dateObjs[currDay] || 0,
           'average': averageData[dateObj.getHours()],
+        }
+        return tableData
+      }
+      
+      function filterData(dateObjs, seperator){
+        var dateObj = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
+        var currHour = seperator + pad(dateObj.getHours(),2) + ':00:00'
+        var currDay = dateObj.getFullYear() + '-' + pad((dateObj.getMonth() + 1),2) + '-' + pad(dateObj.getDate(),2) + currHour
+        var lastDateObj = new Date(new Date() - (1000 * 60 * 60 * 24))
+        var lastDay = lastDateObj.getFullYear() + '-' + pad((lastDateObj.getMonth() + 1),2) + '-' + pad(lastDateObj.getDate(),2) + currHour
+        var lastWkObj = new Date(new Date() - (1000 * 60 * 60 * 24 * 7))
+        var lastWeek = lastWkObj.getFullYear() + '-' + pad((lastWkObj.getMonth() + 1),2) + '-' + pad(lastWkObj.getDate(),2) + currHour
+        
+        var percentYesterday = percent(dateObjs[currDay], dateObjs[lastDay])
+        var percentLastWeek = percent(dateObjs[currDay], dateObjs[lastWeek])
+        if (percentLastWeek !== percentLastWeek) debugger
+        var tableData = {
+          'Current Hour': dateObjs[currDay] || 0,
+          'Percent Day over Day': percentYesterday,
+          '24 Hours Ago': dateObjs[lastDay] || 0, 
+          'Percent Last Week': percentLastWeek,
+          'Last Week': dateObjs[lastWeek] || 0
         }
         return tableData
       }
