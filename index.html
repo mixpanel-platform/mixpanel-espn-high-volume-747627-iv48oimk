@@ -58,7 +58,7 @@
         return Events({
           from_date: params.from,
           to_date:   params.to,
-          event_selectors: [{event: 'Page View', selector:'defined (properties["Referrer Slot"]) and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] == "Home Page") and (properties["Edition Name"] == "English / United States") and defined (properties["Story Headline"])'}]
+          event_selectors: [{event: 'Page View', selector:'defined (properties["Referrer Slot"]) and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] == "Home Page") and (properties["Edition Name"] == "English / United States") and defined (properties["Referrer Position"]) and (properties["Referrer Is Headline"] == "FALSE") and defined (properties["Story Headline"])'}]
         })
         .filter(function(event){ return today(event) || yesterdayHour(event) || weekHour(event)})
         
