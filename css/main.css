@@ -34,3 +34,8 @@ button {
     margin-left: 10px;
     margin-right: 10px;
 }
+
+.section-header {
+    font-size: 1.7em;
+    padding-bottom: 20px;
+}
