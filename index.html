@@ -411,7 +411,7 @@
               sortingBuffer.sort(function(a, b) {
                 return (a['storyNumber'] - b['storyNumber']);
               });
-              sortedRes.concat(sortingBuffer);
+              sortedRes = sortedRes.concat(sortingBuffer);
               sortingBuffer = [currentData];
             } else {
               sortingBuffer.push(currentData);
