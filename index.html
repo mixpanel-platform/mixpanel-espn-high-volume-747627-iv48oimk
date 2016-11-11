@@ -391,9 +391,13 @@
             }
           })
           // SB UI code
+          res.sort(function(a, b) {
+            return (a['storyNumber'] - b['storyNumber']);
+          });
+          
           // Sort returned data by increasing slot number
           res.sort(function(a, b) {
-              return (a['slot'] - b['slot']);
+            return (a['slot'] - b['slot']);
           });
           
           pageViewsSlotData = res;
