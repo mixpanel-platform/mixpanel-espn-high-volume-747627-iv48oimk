@@ -407,12 +407,12 @@
           for (var i = 1; i < res.length; i++) {
             previousData = res[i-1];
             currentData = res[i];
-            if (currentData['slot'] !== previousData['slot']) {
+            if ((currentData['slot'] !== previousData['slot']) || i === res.length -1) {
               sortingBuffer.sort(function(a, b) {
                 return (a['storyNumber'] - b['storyNumber']);
               });
               sortedRes.concat(sortingBuffer);
-              sortingBuffer = [];
+              sortingBuffer = [currentData];
             } else {
               sortingBuffer.push(currentData);
             }
