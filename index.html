@@ -58,7 +58,7 @@
         return Events({
           from_date: params.from,
           to_date:   params.to,
-          event_selectors: [{event: 'Page View', selector:'defined (properties["Referrer Slot"]) and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] == "Home Page") and (properties["Edition Name"] == "English / United States") and defined (properties["Referrer Position"]) and (properties["Referrer Is Headline"] == "FALSE") and defined (properties["Story Headline"])'}]
+          event_selectors: [{event: 'Page View', selector:params.selector}]
         })
         .filter(function(event){ return today(event) || yesterdayHour(event) || weekHour(event)})
         .filter(item => stringSlot(item) <= 20)
@@ -125,7 +125,7 @@
         return Events({
           from_date: params.from,
           to_date:   params.to,
-          event_selectors: [{event: 'Page View', selector:'defined (properties["Referrer Slot"]) and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] == "Home Page") and (properties["Edition Name"] == "English / United States") and defined (properties["Referrer Position"]) and (properties["Referrer Is Headline"] == "FALSE") and defined (properties["Story Headline"])'}]
+          event_selectors: [{event: 'Page View', selector:params.selector}]
         })
         .filter(dayOfWeek)
         .groupBy([stringSlot, getHour], mixpanel.reducer.count())
@@ -179,7 +179,7 @@
         return Events({
           from_date: params.from,
           to_date:   params.to,
-          event_selectors: [{event: 'Page View', selector:'defined (properties["Referrer Slot"]) and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] == "Home Page") and (properties["Edition Name"] == "English / United States") and defined (properties["Referrer Position"]) and (properties["Referrer Is Headline"] == "FALSE") and defined (properties["Story Headline"])'}]
+          event_selectors: [{event: 'Page View', selector:params.selector}]
         })
         .filter(eightHours)
         .filter(item => stringSlot(item) <= 20)
@@ -302,6 +302,7 @@
       });
       
       function Script() { 
+        var selector = 'defined (properties["Referrer Slot"]) and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] == "Home Page") and (properties["Edition Name"] == "English / United States") and defined (properties["Referrer Position"]) and (properties["Referrer Is Headline"] == "FALSE") and defined (properties["Story Headline"])'
         var highChartsConfig = {
               tooltip: {
                   formatter: function () {
@@ -330,14 +331,15 @@
         var utcToEst = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
         
         var pageViewSlotTodayParams = {
+          selector: selector,
           from: new Date(utcToEst - 1000 * 3600 * 8).toISOString().split('T')[0],
           to: utcToEst.toISOString().split('T')[0],
         }
         
         var pageViewAverageParams = {
+          selector: selector,
           to: new Date().toISOString().split('T')[0],
           from: new Date(new Date() - 60 * 60 * 1000 * 24 * 20).toISOString().split('T')[0],
-          os: 'desktop'
         }
         
         var $pastPageViewsSlotToday = MP.api.jql($('#segmentationQuery').html(), pageViewSlotTodayParams)
@@ -445,7 +447,7 @@
         /* index page views */
         
         var pageViewIndexParams = {
-          where: '(properties["Edition Name"] == "English / United States") and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows") and (properties["Referring Page"] != "Home Page") and defined (properties["Referring Page"])',
+          where: selector,
           on: 'properties["Referring Page"]',
           to_date: utcToEst.toISOString().split('T')[0],
           from_date: new Date(utcToEst - 60 * 60 * 1000 * 24 * 7).toISOString().split('T')[0],
@@ -480,7 +482,7 @@
         var jqlParams = {
           to: new Date().toISOString().split('T')[0],
           from: new Date(new Date() - 60 * 60 * 1000 * 24 * 7).toISOString().split('T')[0],
-          os: 'desktop'
+          selector: selector
         }
         
         var query = $('#multiseg').html()
