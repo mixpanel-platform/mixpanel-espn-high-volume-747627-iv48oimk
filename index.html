@@ -391,16 +391,35 @@
             }
           })
           // SB UI code
-          res.sort(function(a, b) {
-            return (a['storyNumber'] - b['storyNumber']);
-          });
           
           // Sort returned data by increasing slot number
           res.sort(function(a, b) {
             return (a['slot'] - b['slot']);
           });
           
-          pageViewsSlotData = res;
+          // Sort again to order storyNumbers within each grouping of slot numbers
+          var sortedRes = [];
+          var sortingBuffer = [res[0]];
+          
+          var previousData = {};
+          var currentData = {};
+          for (var i = 1; i < res.length; i++) {
+            previousData = res[i-1];
+            currentData = res[i];
+            if (currentData['slot'] !== previousData['slot']) {
+              sortingBuffer.sort(function(a, b) {
+                return (a['storyNumber'] - b['storyNumber']);
+              });
+              sortedRes.concat(sortingBuffer);
+              sortingBuffer = [];
+            } else {
+              sortingBuffer.push(currentData);
+            }
+          }
+          // End sorting
+          
+          pageViewsSlotData = sortedRes;
+          //pageViewsSlotData = res;
           
           /*var $chart = $('.pageViewsSlotChart').MPChart({
             highchartsOptions: highChartsConfig,
