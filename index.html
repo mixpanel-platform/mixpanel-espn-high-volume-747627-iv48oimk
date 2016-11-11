@@ -230,16 +230,21 @@
         .map(item => {
           var res = []
           var slot = Number(item.key[0])
-          var previousStory = undefined
+          var previousStory
           var storyNumber = 0
           var tmp = {data: []}
           _.each(item.value, (storyVals, hour) =>{
-            tmp = tmp || {data: []}            
+            tmp = tmp || {data: []}   
+            var timestamp = new Date(utcToEst)
+            timestamp.setHours(Number(hour))
+            timestamp.setMinutes(0)
+            timestamp.setSeconds(0)
+            timestamp.setMilliseconds(0)
             if (previousStory !== storyVals.story) {
               previousStory = storyVals.story
               storyNumber ++ 
               if(tmp.slot){
-                tmp.data.push({x: new Date(utcToEst).setHours(Number(hour)), y:storyVals.value})
+                tmp.data.push({x: timestamp.getTime(), y:storyVals.value})
                 res.push(tmp)
               }
               tmp = {}
@@ -248,7 +253,7 @@
               tmp.name = storyVals.story
               tmp.data = []
             }
-            tmp.data.push({x: new Date(utcToEst).setHours(Number(hour)), y:storyVals.value})
+            tmp.data.push({x: timestamp.getTime(), y:storyVals.value})
           })
           
           return res
