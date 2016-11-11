@@ -693,6 +693,7 @@
         
       var filterDropdown = $('.report-filter-dropdown').MPSelect(editionDropdownOptions);
       filterDropdown.on('change', function(e, selection) {
+        edition = selection;
         Script();
       });
       
