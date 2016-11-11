@@ -190,7 +190,6 @@
         })
         .filter(eightHours)
         .filter(item => stringSlot(item) <= 20)
-        // .groupBy([stringSlot, getHour, 'properties.Story Headline'], mixpanel.reducer.count())
         .groupBy([stringSlot], (accs, items) => {
           var res = {}
           _.each(items, item => {
@@ -226,7 +225,6 @@
           })
           return res
         })
-        // now test for story changes to handle the count and the joined data points
         .map(item => {
           var res = []
           var slot = Number(item.key[0])
