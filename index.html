@@ -29,8 +29,8 @@
       <div>
         <h3 class="filter-header">Platform</h3>
         <div class="report-platform-switch">
-          <button class="platform-switch-desktop">Desktop</button>
-          <button class="platform-switch-mobile">Mobile</button>
+          <button onclick="desktopLoad()" class="platform-switch-desktop">Desktop</button>
+          <button onclick="mobileLoad()" class="platform-switch-mobile">Mobile</button>
         </div>
       </div>
     </div>
@@ -728,6 +728,17 @@
         slotRange = selection;
         Script();
       })
+      
+      function desktopLoad() {
+        platform = 'desktop';
+        Script();
+      }
+      
+      function mobileLoad() {
+        platform = 'mobile';
+        Script();
+      }
+      
     </script>
     <script src="js/eventListeners.js"></script>
   </body>
