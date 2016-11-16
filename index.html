@@ -322,7 +322,8 @@
                   formatter: function () {
                     var dateObj = new Date(this.x)
                     var [day, mon, date, year, hour] = dateObj.toString().split(' ')
-                    debugger
+                    console.log("Tooltip")
+                    console.log(this)
                     var response = [mon, date, hour].join(' ') + '<br/>' + this.series.name + ': ' + this.y
                     return response
                   }
@@ -363,12 +364,9 @@
         Promise.all([$pastPageViewsSlotToday,$pastPageViewsSlotAverage]).then(function(dataArray){
           var todayData = _.flatten(dataArray[0])
           var averageData = dataArray[1][0]
-          console.log(todayData)
-          console.log(averageData)
           var graphData = {}
           var res = []
           _.each(todayData, function(valObj){
-            console.log(valObj)
             var slot = valObj.slot
             var tmp = _.clone(valObj)
             tmp.data = _.clone(valObj.data)
@@ -381,7 +379,6 @@
                 hourAvgs[idx] = averageData[slot][hours[idx]]
                 utcDate = new Date( new Date(time).getTime() + new Date(time).getTimezoneOffset() * 6000).toLocaleString()
                 if (utcDate.split(":")[0] == utcToEst.toLocaleString().split(":")[0]) {
-                  console.log("Extrapolating for time")// so this is not taking into account tz difference between the two
                   hourAvgs[idx] = hourAvgs[idx] / 60 * new Date().getMinutes()
                 }
                 if (hourAvgs[idx] == 0) { hourAvgs[idx] = value.y}
