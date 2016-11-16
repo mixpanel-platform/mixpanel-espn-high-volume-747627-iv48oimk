@@ -369,7 +369,6 @@
             var hourAvgs = {}
             var time, hourAvg, utcDate
             _.each(valObj.data, function(value, idx){
-                debugger
                 time = value.x
                 hours[idx] = new Date(time).getHours()
                 hourAvgs[idx] = averageData[slot][hours[idx]]
