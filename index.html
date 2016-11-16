@@ -168,13 +168,7 @@
     </script>
     
     <script id="segmentationQuery">
-       var utcToEst = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
-
-      // var params = { 
-      //   from: new Date(utcToEst - 1000 * 3600 * 8).toISOString().split('T')[0],
-      //   to: utcToEst.toISOString().split('T')[0],
-      // }
-      
+     var utcToEst = new Date()
       function main() {
         return Events({
           from_date: params.from,
@@ -193,8 +187,8 @@
           _.each(accs, acc => {
             _.each(acc, (v,k) => {
               _.each(v, (count, story) => {
-               res[k] = res[k] || {}
-               res[k][story] = res[k][story] + count || count 
+              res[k] = res[k] || {}
+              res[k][story] = res[k][story] + count || count 
               })    
             })
           })
