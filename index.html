@@ -232,7 +232,7 @@
               previousStory = storyVals.story
               storyNumber ++ 
               if(tmp.slot){
-                tmp.data.push({x: timestamp.toISOString(), y:storyVals.value})
+                tmp.data.push({x: timestamp.getTime(), y:storyVals.value})
                 res.push(tmp)
               }
               tmp = {}
@@ -241,7 +241,7 @@
               tmp.name = storyVals.story
               tmp.data = []
             }
-            tmp.data.push({x: timestamp.toISOString(), y:storyVals.value})
+            tmp.data.push({x: timestamp.getTime(), y:storyVals.value})
           })
           res.push(tmp)
           return res
