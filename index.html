@@ -114,6 +114,61 @@
       }
     </script>
     <script id="averageQuery">
+      var utcToEst = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
+
+      // var params = { 
+      //   from: new Date(utcToEst - 1000 * 3600 * 24 * 20).toISOString().split('T')[0],
+      //   to: utcToEst.toISOString().split('T')[0],
+      // }
+      
+      function main() {
+        return Events({
+          from_date: params.from,
+          to_date:   params.to,
+          event_selectors: [{event: 'Page View', selector:params.selector}]
+        })
+        .filter(dayOfWeek)
+        .groupBy([stringSlot, getHour], mixpanel.reducer.count())
+        .map(item => {
+          var res = {}
+          res.key = item.key
+          res.value = (item.value / ( (new Date(params.to)  - new Date(params.from)) / (36e5 * 24 * 7) ) ).toFixed()
+          return res
+        })
+        .reduce((accs,items) => {
+          var res = {}
+          _.each(items, item => {
+            res[item.key[0]] = res[item.key[0]] || {}
+            res[item.key[0]][item.key[1]] = Number(res[item.key[0]][item.key[1]]) + Number(item.value) || Number(item.value)
+          })
+          _.each(accs, acc =>{
+            _.each(acc, (hourVals, slot)=> {
+              res[slot] = res[slot] || {}
+              _.each(hourVals, (val, hour)=>{
+                res[slot][hour] = res[slot][hour] + val || val
+              })
+            })
+          })
+          return res
+        })
+      }
+      
+      
+      function getHour(event){
+        return new Date(event.time).getHours()
+      }
+      
+      function dayOfWeek(event){
+        return utcToEst.getDay() == new Date(event.time).getDay()
+      }
+      
+      function stringSlot(event){
+        return String(event.properties["Referrer Slot"])
+      }
+    </script>
+    
+    <script id="segmentationQuery">
+
       var utcToEst = new Date()
 
       // var params = { 
@@ -127,10 +182,8 @@
           to_date:   params.to,
           event_selectors: [{event: 'Page View', selector:params.selector}]
         })
-        // .map(item => utcToEst)
-        // .reduce(mixpanel.reducer.any())
         .filter(eightHours)
-        .filter(item => stringSlot(item) <= 1)
+        .filter(item => stringSlot(item) <= 20)
         .groupBy([stringSlot], (accs, items) => {
           var res = {}
           _.each(items, item => {
@@ -194,114 +247,6 @@
               tmp.data = []
             }
             tmp.data.push({x: timestamp.getTime(), y:storyVals.value})
-          })
-           res.push(tmp)
-          return res
-        })
-        
-        
-      }
-      
-      
-      function getHour(event){
-        return new Date(event.time).getHours()
-      }
-      
-      function dayOfWeek(event){
-        return utcToEst.getDay() == new Date(event.time).getDay()
-      }
-      
-      function eightHours(event){
-        return (new Date() - 1000 * 3600 * 12) < event.time
-      }
-      
-      function stringSlot(event){
-        return String(event.properties["Referrer Slot"])
-      }
-    </script>
-    
-    <script id="segmentationQuery">
-
-      var utcToEst = new Date()
-
-      // var params = { 
-      //   from: new Date(utcToEst - 1000 * 3600 * 8).toISOString().split('T')[0],
-      //   to: utcToEst.toISOString().split('T')[0],
-      // }
-      
-      function main() {
-        return Events({
-          from_date: params.from,
-          to_date:   params.to,
-          event_selectors: [{event: 'Page View', selector:params.selector}]
-        })
-        // .map(item => utcToEst)
-        // .reduce(mixpanel.reducer.any())
-        .filter(eightHours)
-        .filter(item => stringSlot(item) <= 1)
-        .groupBy([stringSlot], (accs, items) => {
-          var res = {}
-          _.each(items, item => {
-            var hour = getHour(item)
-            res[hour] = res[hour] || {}
-            res[hour][item.properties["Story Headline"]] = res[hour][item.properties["Story Headline"]] + 1 || 1
-          })
-          _.each(accs, acc => {
-            _.each(acc, (v,k) => {
-              _.each(v, (count, story) => {
-              res[k] = res[k] || {}
-              res[k][story] = res[k][story] + count || count 
-              })    
-            })
-          })
-          return res
-        })
-        .map(item => {
-          var res = {}
-          res.key = item.key
-          res.value = {}
-          _.each(item.value, (storyVals, hour) => {
-            // test for handoff / new story
-            var maxStory = undefined
-            var maxCount = 0
-            _.each(storyVals, (val, story) => {
-              if (val > maxCount) {
-                maxCount = val
-                maxStory = story
-              }
-            })
-            res.value[hour] = {story: maxStory, value: maxCount}
-          })
-          return res
-        })
-        .map(item => {
-          var res = []
-          var slot = Number(item.key[0])
-          var previousStory
-          var storyNumber = 0
-          var tmp = {data: []}
-          _.each(item.value, (storyVals, hour) =>{
-            tmp = tmp || {data: []}
-            var timestamp = new Date(utcToEst)
-            timestamp.setHours(Number(hour))
-            timestamp.setMinutes(0)
-            timestamp.setSeconds(0)
-            timestamp.setMilliseconds(0)
-            
-            if (previousStory !== storyVals.story) {
-              previousStory = storyVals.story
-              storyNumber ++ 
-              if(tmp.slot){
-                tmp.data.push({x: timestamp, y:storyVals.value})
-                res.push(tmp)
-              }
-              tmp = {}
-              tmp.slot = slot
-              tmp.storyNumber = storyNumber
-              tmp.name = storyVals.story
-              tmp.data = []
-            }
-            tmp.data.push({x: timestamp, y:storyVals.value})
           })
            res.push(tmp)
           return res
