@@ -232,7 +232,7 @@
               previousStory = storyVals.story
               storyNumber ++ 
               if(tmp.slot){
-                tmp.data.push({x: timestamp.getTime(), y:storyVals.value})
+                tmp.data.push({x: timestamp.toISOString(), y:storyVals.value})
                 res.push(tmp)
               }
               tmp = {}
@@ -241,7 +241,7 @@
               tmp.name = storyVals.story
               tmp.data = []
             }
-            tmp.data.push({x: timestamp.getTime(), y:storyVals.value})
+            tmp.data.push({x: timestamp.toISOString(), y:storyVals.value})
           })
           res.push(tmp)
           return res
@@ -369,6 +369,7 @@
             var hourAvgs = {}
             var time, hourAvg, utcDate
             _.each(valObj.data, function(value, idx){
+                debugger
                 time = value.x
                 hours[idx] = new Date(time).getHours()
                 hourAvgs[idx] = averageData[slot][hours[idx]]
