@@ -178,7 +178,7 @@
           event_selectors: [{event: 'Page View', selector:params.selector}]
         })
         .filter(eightHours)
-        .filter(item => stringSlot(item) <= 1)
+        .filter(item => stringSlot(item) <= 20)
         .groupBy([stringSlot], (accs, items) => {
           var res = {}
           _.each(items, item => {
