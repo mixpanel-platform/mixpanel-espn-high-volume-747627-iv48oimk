@@ -656,8 +656,8 @@
                   formatter: function () {
                     var dateObj = new Date(this.x)
                     var [day, mon, date, year, hour] = dateObj.toString().split(' ')
-                    debugger
-                    var response = [mon, date, hour].join(' ') + '<br/>' + this.series.name + ': ' + this.y
+                    var slot = this.series.userOptions.slot
+                    var response = [mon, date, hour].join(' ') + '<br/>' + this.series.name + ': ' + this.y + '</br>Slot ' + slot 
                     return response
                   }
               },
