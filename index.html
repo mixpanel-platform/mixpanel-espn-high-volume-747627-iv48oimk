@@ -168,14 +168,9 @@
     </script>
     
     <script id="segmentationQuery">
-
       var utcToEst = new Date()
 
-      // var params = { 
-      //   from: new Date(utcToEst - 1000 * 3600 * 8).toISOString().split('T')[0],
-      //   to: utcToEst.toISOString().split('T')[0],
-      // }
-      
+   
       function main() {
         return Events({
           from_date: params.from,
@@ -183,7 +178,7 @@
           event_selectors: [{event: 'Page View', selector:params.selector}]
         })
         .filter(eightHours)
-        .filter(item => stringSlot(item) <= 20)
+        .filter(item => stringSlot(item) <= 1)
         .groupBy([stringSlot], (accs, items) => {
           var res = {}
           _.each(items, item => {
@@ -227,7 +222,7 @@
           var tmp = {data: []}
           _.each(item.value, (storyVals, hour) =>{
             tmp = tmp || {data: []}   
-            var timestamp = new Date(utcToEst)
+            var timestamp = new Date()
             timestamp.setHours(Number(hour))
             timestamp.setMinutes(0)
             timestamp.setSeconds(0)
@@ -237,7 +232,7 @@
               previousStory = storyVals.story
               storyNumber ++ 
               if(tmp.slot){
-                tmp.data.push({x: timestamp.getTime(), y:storyVals.value})
+                tmp.data.push({x: timestamp.toISOString(), y:storyVals.value})
                 res.push(tmp)
               }
               tmp = {}
@@ -246,9 +241,9 @@
               tmp.name = storyVals.story
               tmp.data = []
             }
-            tmp.data.push({x: timestamp.getTime(), y:storyVals.value})
+            tmp.data.push({x: timestamp.toISOString(), y:storyVals.value})
           })
-           res.push(tmp)
+          res.push(tmp)
           return res
         })
         
