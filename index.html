@@ -53,64 +53,109 @@
     </div>
     
     <script id='multiseg'>
-      var utcToEst = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
+     
+      var utcToEst = new Date()
+
+      // var params = { 
+      //   from: new Date(utcToEst - 1000 * 3600 * 8).toISOString().split('T')[0],
+      //   to: utcToEst.toISOString().split('T')[0],
+      // }
+      
       function main() {
         return Events({
           from_date: params.from,
           to_date:   params.to,
           event_selectors: [{event: 'Page View', selector:params.selector}]
         })
-        .filter(function(event){ return today(event) || yesterdayHour(event) || weekHour(event)})
-        .filter(item => stringSlot(item) <= 20)
-        .groupBy([stringSlot, "properties.Referrer Position Type"], function(accs, events){
+        // .map(item => utcToEst)
+        // .reduce(mixpanel.reducer.any())
+        .filter(eightHours)
+        .filter(item => stringSlot(item) <= 1)
+        .groupBy([stringSlot], (accs, items) => {
           var res = {}
-          _.each(events, function(event){
-            var timeStr = [new Date(event.time).toISOString().split(':')[0],'00','00'].join(':')
-            res[timeStr] = res[timeStr] + 1 || 1
-            if (event.time > res.last || !res.last){
-              res.story = event.properties["Story Headline"]
-              res.last = event.time
-            }
+          _.each(items, item => {
+            var hour = getHour(item)
+            res[hour] = res[hour] || {}
+            res[hour][item.properties["Story Headline"]] = res[hour][item.properties["Story Headline"]] + 1 || 1
           })
-          _.each(accs, function(acc){
-            _.each(acc, function(v, k){
-              if (k == 'story' || k =='last'){
-                if (acc.last > res.last || !res.last) {
-                  res.story = acc.story
-                  res.last = acc.last
-                }
-              } else {
-                res[k] = res[k] + v || v
-              } 
+          _.each(accs, acc => {
+            _.each(acc, (v,k) => {
+              _.each(v, (count, story) => {
+              res[k] = res[k] || {}
+              res[k][story] = res[k][story] + count || count 
+              })    
             })
           })
           return res
         })
-        .map(function(item){
-          var res = {
-            slot: item.key[0],
-            position: item.key[1],
-            story: item.value.story,
-            value: _.omit(item.value, ['story', 'last'])
-          }
+        .map(item => {
+          var res = {}
+          res.key = item.key
+          res.value = {}
+          _.each(item.value, (storyVals, hour) => {
+            // test for handoff / new story
+            var maxStory = undefined
+            var maxCount = 0
+            _.each(storyVals, (val, story) => {
+              if (val > maxCount) {
+                maxCount = val
+                maxStory = story
+              }
+            })
+            res.value[hour] = {story: maxStory, value: maxCount}
+          })
           return res
         })
+        .map(item => {
+          var res = []
+          var slot = Number(item.key[0])
+          var previousStory
+          var storyNumber = 0
+          var tmp = {data: []}
+          _.each(item.value, (storyVals, hour) =>{
+            tmp = tmp || {data: []}   
+            var timestamp = new Date(utcToEst)
+            timestamp.setHours(Number(hour))
+            timestamp.setMinutes(0)
+            timestamp.setSeconds(0)
+            timestamp.setMilliseconds(0)
+            if (previousStory !== storyVals.story) {
+              previousStory = storyVals.story
+              storyNumber ++ 
+              if(tmp.slot){
+                tmp.data.push({x: timestamp.getTime(), y:storyVals.value})
+                res.push(tmp)
+              }
+              tmp = {}
+              tmp.slot = slot
+              tmp.storyNumber = storyNumber
+              tmp.name = storyVals.story
+              tmp.data = []
+            }
+            tmp.data.push({x: timestamp.getTime(), y:storyVals.value})
+          })
+          
+          return res
+        })
+        
+        
+      }
+      
+      
+      function getHour(event){
+        return new Date(event.time).getHours()
+      }
+      
+      function dayOfWeek(event){
+        return utcToEst.getDay() == new Date(event.time).getDay()
+      }
+      
+      function eightHours(event){
+        return new Date(new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"})) - 1000 * 3600 * 8) < event.time
       }
       
       function stringSlot(event){
         return String(event.properties["Referrer Slot"])
-      }
-      
-      function today(event){
-        return utcToEst.toISOString().split('T')[0] == new Date(event.time).toISOString().split('T')[0]
-      }
-      
-      function yesterdayHour(event){
-        return new Date(utcToEst - 1000 * 60 * 60 * 24).toISOString().split(':')[0] == new Date(event.time).toISOString().split(':')[0]
-      }
-      
-      function weekHour(event){
-        return new Date(utcToEst - 1000 * 60 * 60 * 24 * 7).toISOString().split(':')[0] == new Date(event.time).toISOString().split(':')[0]
       }
     </script>
     <script id="averageQuery">
