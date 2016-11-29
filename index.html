@@ -269,7 +269,6 @@
       }
     </script>
     <script>
-      debugger
       // Use Data tables for better sorting/limiting etc
        /* slot page views */
 
@@ -402,7 +401,7 @@
               var val = slotStory.data[slotStory.data.length - 1]["y"]
               var hour = new Date(time).getHours()
               var hourAvg = averageData[slot][hour]
-              tableData[slot]["trend"] = val
+              tableData[slot]["trend"] = val.toFixed(2)
               tableData[slot]["average"] = hourAvg
             }
           })
@@ -604,7 +603,6 @@
       // range param is string of form 'x y' where x is the lower bound and y the upper bound
       // ex: range = '1 5', range = '6 10', etc.
       function renderSlotPerformanceChart(range) {
-        debugger
         console.log('rendering chart...');
         console.log(pageViewsSlotData);
         var lowerBound = (parseInt(range.split(' ')[0]));
@@ -736,7 +734,6 @@
                   "Tennis index",
                   "WWE index",
                   ]
-      debugger
       var indexDropdownOptions = {
         items: _.map(indexes, function(index) { return {label: index, value: index} })
         };
