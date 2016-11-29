@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
-    
+
     <script src="js/state.js"></script>
     <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
@@ -19,6 +19,10 @@
   <body class="mixpanel-platform-body">
     <div class="section report-header">
       <div>
+        <h3 class="filter-header">Index</h3>
+        <div class="index-filter-dropdown"></div>
+      </div>
+      <div>
         <h3 class="filter-header">Edition</h3>
         <div class="report-filter-dropdown"></div>
       </div>
@@ -28,10 +32,7 @@
       </div>
       <div>
         <h3 class="filter-header">Platform</h3>
-        <div class="report-platform-switch">
-          <button onclick="desktopLoad()" class="platform-switch-desktop">Desktop</button>
-          <button onclick="mobileLoad()" class="platform-switch-mobile">Mobile</button>
-        </div>
+        <div class="platform-filter-dropdown"></div>
       </div>
     </div>
     <div class="section pageViewsSlotDiv hidden">
@@ -46,19 +47,19 @@
       <table id="table" class="display slotStoryViewsTable" width="100%"></table>
     </div>
     <br>
-    <div class="section pageViewsIndexDiv hidden">  
+    <div class="section pageViewsIndexDiv hidden">
       <h1 class="section-header pageViewsIndexHeader">Page Views by Index</h1>
       <div class="chart pageViewsIndexChart"></div>
       <table id="table" class="display pageViewsIndexTable" width="100%"></table>
     </div>
-    
+
     <script id='multiseg'>
       var utcToEst = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
       function main() {
         return Events({
           from_date: params.from,
           to_date:   params.to,
-          event_selectors: [{event: 'Page View', selector:params.selector}]
+          event_selectors: [{event: 'Page View', selector:params.selector}, {event: 'Video Started', selector:params.selector}]
         })
         .filter(function(event){ return today(event) || yesterdayHour(event) || weekHour(event)})
         .filter(item => stringSlot(item) <= 20)
@@ -81,7 +82,7 @@
                 }
               } else {
                 res[k] = res[k] + v || v
-              } 
+              }
             })
           })
           return res
@@ -96,19 +97,19 @@
           return res
         })
       }
-      
+
       function stringSlot(event){
         return String(event.properties["Referrer Slot"])
       }
-      
+
       function today(event){
         return utcToEst.toISOString().split('T')[0] == new Date(event.time).toISOString().split('T')[0]
       }
-      
+
       function yesterdayHour(event){
         return new Date(utcToEst - 1000 * 60 * 60 * 24).toISOString().split(':')[0] == new Date(event.time).toISOString().split(':')[0]
       }
-      
+
       function weekHour(event){
         return new Date(utcToEst - 1000 * 60 * 60 * 24 * 7).toISOString().split(':')[0] == new Date(event.time).toISOString().split(':')[0]
       }
@@ -116,16 +117,16 @@
     <script id="averageQuery">
       var utcToEst = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
 
-      // var params = { 
+      // var params = {
       //   from: new Date(utcToEst - 1000 * 3600 * 24 * 20).toISOString().split('T')[0],
       //   to: utcToEst.toISOString().split('T')[0],
       // }
-      
+
       function main() {
         return Events({
           from_date: params.from,
           to_date:   params.to,
-          event_selectors: [{event: 'Page View', selector:params.selector}]
+          event_selectors: [{event: 'Page View', selector:params.selector}, {event: 'Video Started', selector:params.selector}]
         })
         .filter(dayOfWeek)
         .groupBy([stringSlot, getHour], mixpanel.reducer.count())
@@ -152,30 +153,30 @@
           return res
         })
       }
-      
-      
+
+
       function getHour(event){
         return new Date(event.time).getHours()
       }
-      
+
       function dayOfWeek(event){
         return utcToEst.getDay() == new Date(event.time).getDay()
       }
-      
+
       function stringSlot(event){
         return String(event.properties["Referrer Slot"])
       }
     </script>
-    
+
     <script id="segmentationQuery">
       var utcToEst = new Date()
 
-   
+
       function main() {
         return Events({
           from_date: params.from,
           to_date:   params.to,
-          event_selectors: [{event: 'Page View', selector:params.selector}]
+          event_selectors: [{event: 'Page View', selector:params.selector}, {event: 'Video Started', selector:params.selector}]
         })
         .filter(eightHours)
         .filter(item => stringSlot(item) <= 20)
@@ -190,8 +191,8 @@
             _.each(acc, (v,k) => {
               _.each(v, (count, story) => {
               res[k] = res[k] || {}
-              res[k][story] = res[k][story] + count || count 
-              })    
+              res[k][story] = res[k][story] + count || count
+              })
             })
           })
           return res
@@ -221,16 +222,16 @@
           var storyNumber = 0
           var tmp = {data: []}
           _.each(item.value, (storyVals, hour) =>{
-            tmp = tmp || {data: []}   
+            tmp = tmp || {data: []}
             var timestamp = new Date()
             timestamp.setHours(Number(hour))
             timestamp.setMinutes(0)
             timestamp.setSeconds(0)
             timestamp.setMilliseconds(0)
-            
+
             if (previousStory !== storyVals.story) {
               previousStory = storyVals.story
-              storyNumber ++ 
+              storyNumber ++
               if(tmp.slot){
                 tmp.data.push({x: timestamp.toISOString(), y:storyVals.value})
                 res.push(tmp)
@@ -246,31 +247,32 @@
           res.push(tmp)
           return res
         })
-        
-        
+
+
       }
-      
-      
+
+
       function getHour(event){
         return new Date(event.time).getHours()
       }
-      
+
       function dayOfWeek(event){
         return utcToEst.getDay() == new Date(event.time).getDay()
       }
-      
+
       function eightHours(event){
         return (new Date() - 1000 * 3600 * 12) < event.time
       }
-      
+
       function stringSlot(event){
         return String(event.properties["Referrer Slot"])
       }
     </script>
     <script>
+      debugger
       // Use Data tables for better sorting/limiting etc
        /* slot page views */
-       
+
       var $pageViewsSlotTable = $('.pageViewsSlotTable').DataTable( {
             columns: [
                 { title: 'Slot', data: 'name' },
@@ -278,7 +280,7 @@
                 { title: 'Average', data: 'average' },
             ]
         });
-        
+
       var $pageViewsIndexTable = $('.pageViewsIndexTable').DataTable( {
             columns: [
                 { title: 'Index', data: 'name' },
@@ -297,23 +299,27 @@
             { title: '24 Hours Ago', data: '24 Hours Ago'},
         ]
       });
-      
-      function Script() { 
+
+      function Script() {
         var selector = 'defined (properties["Referrer Slot"]) and defined (properties["Referrer Position"]) and (properties["Referrer Is Headline"] == "FALSE") and defined (properties["Story Headline"])'
 
         switch (platform) {
-          case 'desktop':
-            selector += ' and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows")' 
+          case 'Desktop':
+            selector += ' and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows")'
             break;
-          case 'mobile':
+          case 'Mobile':
             selector += '  and (properties["$os"] != "Linux" and properties["$os"] != "Mac OS X" and properties["$os"] != "Windows")'
             break;
+          case 'All':
+            break;
         }
-        
-        selector +=  'and (properties["Edition Name"] == "' + edition + '")'
-        
-        var homepageSelector = selector + 'and (properties["Referring Page"] == "Home Page")'
-        
+
+        selector +=  ' and (properties["Edition Name"] == "' + edition + '")'
+        selector += ' and not "clubhouse" in properties["Referring Page"] and defined (properties["Referring Page"]) and not "-News" in properties["Referring Page"] and not "-Column" in properties["Referring Page"] and not "-Insider" in properties["Referring Page"]'
+
+        // set this to the index from the dropdown
+        var homepageSelector = selector + 'and (properties["Referring Page"] == "' + index + '")'
+
         var highChartsConfig = {
               tooltip: {
                   formatter: function () {
@@ -331,7 +337,7 @@
                       var dateObj = new Date(this.value)
                       var [day, mon, date, year, hour] = dateObj.toString().split(' ')
                       return [mon, date, hour].join(' ')
-                      
+
                   }
                 }
               },
@@ -340,22 +346,22 @@
               }
             }
         var utcToEst = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
-        
+
         var pageViewSlotTodayParams = {
           selector: homepageSelector,
           from: new Date(utcToEst - 1000 * 3600 * 8).toISOString().split('T')[0],
           to: utcToEst.toISOString().split('T')[0],
         }
-        
+
         var pageViewAverageParams = {
           selector: homepageSelector,
           to: new Date().toISOString().split('T')[0],
           from: new Date(new Date() - 60 * 60 * 1000 * 24 * 20).toISOString().split('T')[0],
         }
-        
+
         var $pastPageViewsSlotToday = MP.api.jql($('#segmentationQuery').html(), pageViewSlotTodayParams)
         var $pastPageViewsSlotAverage = MP.api.jql($('#averageQuery').html(), pageViewAverageParams)
-        
+
         Promise.all([$pastPageViewsSlotToday,$pastPageViewsSlotAverage]).then(function(dataArray){
           var todayData = _.flatten(dataArray[0])
           var averageData = dataArray[1][0]
@@ -383,7 +389,7 @@
             })
             res.push(tmp)
           })
-          
+
           $('.pageViewsSlotDiv').removeClass('hidden')
           var tableData = {}
           var lastSlot = {}
@@ -401,16 +407,16 @@
             }
           })
           // SB UI code
-          
+
           // Sort returned data by increasing slot number
           res.sort(function(a, b) {
             return (a['slot'] - b['slot']);
           });
-          
+
           // Sort again to order storyNumbers within each grouping of slot numbers
           var sortedRes = [];
           var sortingBuffer = [res[0]];
-          
+
           var previousData = {};
           var currentData = {};
           for (var i = 1; i < res.length; i++) {
@@ -429,31 +435,31 @@
           // End sorting
           console.log('done sorting: ');
           console.log(sortedRes);
-          
+
           pageViewsSlotData = sortedRes;
           //pageViewsSlotData = res;
-          
+
           /*var $chart = $('.pageViewsSlotChart').MPChart({
             highchartsOptions: highChartsConfig,
             chartType: 'line',
             data: res
           })*/
-          
+
           renderSlotPerformanceChart(slotRange);
           // End SB UI code
-          
+
           $pageViewsSlotTable.clear()
-          
+
           _.each(tableData, function(vals, slot){
             var row = _.extend({'name': slot}, vals)
             $pageViewsSlotTable.row.add(row)
           })
         $pageViewsSlotTable.draw();
         })
-        
-        
+
+
         /* index page views */
-        
+
         var pageViewIndexParams = {
           where: selector,
           on: 'properties["Referring Page"]',
@@ -461,9 +467,9 @@
           from_date: new Date(utcToEst - 60 * 60 * 1000 * 24 * 7).toISOString().split('T')[0],
           unit: "hour"
         }
-        
+
         var $pastPageViewsIndexData = MP.api.segment('Page View', pageViewIndexParams)
-        
+
         $pastPageViewsIndexData.done(function(data){
           $('.pageViewsIndexDiv').removeClass('hidden')
           var graphData = {}
@@ -477,7 +483,7 @@
             chartType: 'line',
             data: graphData
           })
-          
+
           $pageViewsIndexTable.clear()
           _.each(tableData, function(vals, index){
             var row = _.extend({'name': index}, vals)
@@ -485,14 +491,14 @@
           })
           $pageViewsIndexTable.draw();
         })
-        
+
         /* Slot by story */
         var jqlParams = {
           to: new Date().toISOString().split('T')[0],
           from: new Date(new Date() - 60 * 60 * 1000 * 24 * 7).toISOString().split('T')[0],
           selector: homepageSelector
         }
-        
+
         var query = $('#multiseg').html()
         MP.api.jql(query,jqlParams).done(function(data){
           $('.slotStoryViewsDiv').removeClass('hidden')
@@ -516,18 +522,18 @@
           })
           $slotStoryViewsTable.draw();
         });
-      }      
-      
+      }
+
       function filterGraphData(dateObjs, seperator){
         var dateObj = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
-        var graphData = _.pick(dateObjs, function(v,date) { 
+        var graphData = _.pick(dateObjs, function(v,date) {
           if (new Date(date.replace('T', ' ')) > dateObj - (1000 * 60 * 60 * 8) && new Date(date.replace('T', ' ')) < dateObj){
             return true
           }
-        })  
+        })
         return graphData
       }
-      
+
       function filterTableData(dateObjs, seperator, averageData){
         var dateObj = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
         var currHour = seperator + pad(dateObj.getHours(),2) + ':00:00'
@@ -538,28 +544,28 @@
         }
         return tableData
       }
-      
+
       function filterData(dateObjs, seperator){
         var dateObj = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
         var currHour = seperator + pad(dateObj.getHours(),2) + ':00:00'
         var currDay = dateObj.getFullYear() + '-' + pad((dateObj.getMonth() + 1),2) + '-' + pad(dateObj.getDate(),2) + currHour
         var lastDateObj = new Date(new Date() - (1000 * 60 * 60 * 24))
         var lastDay = lastDateObj.getFullYear() + '-' + pad((lastDateObj.getMonth() + 1),2) + '-' + pad(lastDateObj.getDate(),2) + currHour
-        
+
         var percentYesterday = percent(dateObjs[currDay], dateObjs[lastDay])
         var tableData = {
           'Current Hour': dateObjs[currDay] || 0,
           'Percent Day over Day': percentYesterday,
-          '24 Hours Ago': dateObjs[lastDay] || 0, 
+          '24 Hours Ago': dateObjs[lastDay] || 0,
         }
         return tableData
       }
-  
-      
+
+
       function pad(num, size){ return ('000000000' + num).substr(-size)};
-      function percent(num, denom){ 
+      function percent(num, denom){
         if (denom == 0 || !denom || !num) {
-          return 0 
+          return 0
         } else {
           return ((num - denom) / denom * 100).toFixed(1)
         }
@@ -568,7 +574,7 @@
       Script()
       setInterval(Script, 1000 * 60 * 5)
     </script>
-    
+
     <!-- **** UI Scripting **** -->
     <script id="ui">
       var slotColorPalette = [
@@ -578,7 +584,7 @@
       [ '#baf2bb', '#6ee36f', '#31d832', '#229723', '#135614' ],   // greens
       [ '#dabaed', '#b776dc', '#993cce', '#6b2a90', '#3d1852' ],   // purples
       ];
-    
+
       // Iterate over Slot Performance data (an array of objects to be put in Highcharts series)
       // and insert color properties based on object's slot & story within slot
       function insertColors(data) {
@@ -586,7 +592,7 @@
               var currentData = data[i];
               var dataSlotNumber = (currentData['slot'] - 1) % 4;   // Slot # can be in range [1, 20], this reduces to [0, 4]
               var dataStoryNumber = currentData['storyNumber'];
-      
+
               if (dataStoryNumber >= 5) {
                   currentData['color'] = slotColorPalette[dataSlotNumber][4];
               } else {
@@ -594,7 +600,7 @@
               }
           }
       }
-      
+
       // range param is string of form 'x y' where x is the lower bound and y the upper bound
       // ex: range = '1 5', range = '6 10', etc.
       function renderSlotPerformanceChart(range) {
@@ -603,9 +609,9 @@
         console.log(pageViewsSlotData);
         var lowerBound = (parseInt(range.split(' ')[0]));
         var upperBound = (parseInt(range.split(' ')[1]));
-        
+
         console.log('lb is ' + lowerBound + ' and ub is ' + upperBound);
-        
+
         var dataSet = [];
         // Aggregate any slots within the range
         for (var i = 0; i < pageViewsSlotData.length; i++) {
@@ -617,7 +623,7 @@
 
         // Assign colors to data
         insertColors(dataSet);
-        
+
         chart = new Highcharts.Chart({
               chart: {
                   renderTo: 'slot-performance-chart',
@@ -637,7 +643,7 @@
                       var dateObj = new Date(this.value)
                       var [day, mon, date, year, hour] = dateObj.toString().split(' ')
                       return [mon, date, hour].join(' ')
-                      
+
                   }
                 }
               },
@@ -656,7 +662,7 @@
                     var dateObj = new Date(this.x)
                     var [day, mon, date, year, hour] = dateObj.toString().split(' ')
                     var slot = this.series.userOptions.slot
-                    var response = [mon, date, hour].join(' ') + '<br/>' + this.series.name + ': ' + this.y + '<br/>Slot ' + slot 
+                    var response = [mon, date, hour].join(' ') + '<br/>' + this.series.name + ': ' + this.y + '<br/>Slot ' + slot
                     return response
                   }
               },
@@ -687,7 +693,7 @@
               series: dataSet
           });
       }
-      
+
       var editionDropdownOptions = {
         items: [
             {
@@ -704,7 +710,37 @@
             }
           ]
         };
-      
+      var indexes = [ 
+                  "Home page",
+                  "Boxing index",
+                  "Chalk index",
+                  "Esports index",
+                  "Fantasy index",
+                  "FBA index",
+                  "FFL index",
+                  "FHL index",
+                  "FLB index",
+                  "Golf index",
+                  "Horse index",
+                  "MLB index",
+                  "MMA index",
+                  "NASCAR index",
+                  "NBA index",
+                  "NCAAF index",
+                  "NCAAM index",
+                  "NCAAW index",
+                  "NFL index",
+                  "NHL index",
+                  "Olympics",
+                  "Racing index",
+                  "Tennis index",
+                  "WWE index",
+                  ]
+      debugger
+      var indexDropdownOptions = {
+        items: _.map(indexes, function(index) { return {label: index, value: index} })
+        };
+
       var slotRangeDropdownOptions = {
         items: [
             {
@@ -729,29 +765,46 @@
             }
           ]
       }
-        
+      var platformDropdownOptions = {
+        items: [
+            {
+              label: 'All',
+              value: 'All'
+            },
+            {
+              label: 'Mobile',
+              value: 'Mobile'
+            },
+            {
+              label: 'Desktop',
+              value: 'Desktop'
+            },
+        ]
+      }
+      var indexDropdown = $('.index-filter-dropdown').MPSelect(indexDropdownOptions);
+      indexDropdown.on('change', function(e, selection) {
+        index = selection;
+        Script();
+      });
+
       var filterDropdown = $('.report-filter-dropdown').MPSelect(editionDropdownOptions);
       filterDropdown.on('change', function(e, selection) {
         edition = selection;
         Script();
       });
-      
+
       var rangeDropdown = $('.report-slot-range-dropdown').MPSelect(slotRangeDropdownOptions);
       rangeDropdown.on('change', function(e, selection) {
         slotRange = selection;
         Script();
       })
-      
-      function desktopLoad() {
-        platform = 'desktop';
+
+      var platformDropdown = $('.platform-filter-dropdown').MPSelect(platformDropdownOptions);
+      platformDropdown.on('change', function(e, selection) {
+        platform = selection
         Script();
-      }
-      
-      function mobileLoad() {
-        platform = 'mobile';
-        Script();
-      }
-      
+      })
+
     </script>
     <script src="js/eventListeners.js"></script>
   </body>

@@ -6,4 +6,7 @@ var slotRange = '1 4';
 
 var edition = 'English / United States';
 
-var platform = 'desktop';
+var platform = 'All';
+
+var index = 'Home Page'
+
