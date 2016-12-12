@@ -383,7 +383,7 @@
                 }
                 if (hourAvgs[idx] == 0) { hourAvgs[idx] = value.y}
 
-                tmp.data[idx]['y'] = (value.y - hourAvgs[idx]) / hourAvgs[idx] * 100
+                tmp.data[idx]['y'] = Math.min((value.y - hourAvgs[idx]) / hourAvgs[idx] * 100, 1000)
                 tmp.data[idx]['x'] = new Date(time).getTime() + new Date().getTimezoneOffset() * 1000 * 60
             })
             res.push(tmp)
