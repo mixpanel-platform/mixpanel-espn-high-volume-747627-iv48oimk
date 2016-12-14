@@ -466,7 +466,7 @@
           from_date: new Date(utcToEst - 60 * 60 * 1000 * 24 * 7).toISOString().split('T')[0],
           unit: "hour"
         }
-
+        console.log(pageViewIndexParams)
         var $pastPageViewsIndexData = MP.api.segment('Page View', pageViewIndexParams)
 
         $pastPageViewsIndexData.done(function(data){
