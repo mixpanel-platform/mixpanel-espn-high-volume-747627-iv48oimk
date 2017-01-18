@@ -69,7 +69,7 @@
             var timeStr = [new Date(event.time).toISOString().split(':')[0],'00','00'].join(':')
             res[timeStr] = res[timeStr] + 1 || 1
             if (event.time > res.last || !res.last){
-               var headline = event.properties["Story Headline"] ? event.properties["Story Headline"] : event.properties["Video Headline"]
+              var headline = event.properties["Story Headline"] ? event.properties["Story Headline"] : event.properties["Video Headline"]
               res.story = headline
               res.last = event.time
             }
@@ -324,8 +324,8 @@
         selectorVideo += ' and not "clubhouse" in properties["Referring Page"] and defined (properties["Referring Page"]) and not "-News" in properties["Referring Page"] and not "-Column" in properties["Referring Page"] and not "-Insider" in properties["Referring Page"]'
 
         // set this to the index from the dropdown
-        var homepageSelector = selectorStory + 'and (properties["Referring Page"] == "' + index + '")'
-
+        var homepageSelector = selectorStory + 'and (properties["Sport/League"] == "' + index + '")'
+        selectorVideo += 'and (properties["Sport/League"] == "' + index + '")'
         var highChartsConfig = {
               tooltip: {
                   formatter: function () {
