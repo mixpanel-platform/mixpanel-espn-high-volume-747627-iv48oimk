@@ -59,7 +59,7 @@
         return Events({
           from_date: params.from,
           to_date:   params.to,
-          event_selectors: [{event: 'Page View', selector:params.selector}, {event: 'Video Started', selector:params.selector}]
+          event_selectors: [{event: 'Page View', selector:params.selectorStory}, {event: 'Video Started', selector:params.selectorVideo}]
         })
         .filter(function(event){ return today(event) || yesterdayHour(event) || weekHour(event)})
         .filter(item => stringSlot(item) <= 20)
@@ -126,7 +126,7 @@
         return Events({
           from_date: params.from,
           to_date:   params.to,
-          event_selectors: [{event: 'Page View', selector:params.selector}, {event: 'Video Started', selector:params.selector}]
+          event_selectors: [{event: 'Page View', selector:params.selectorStory}, {event: 'Video Started', selector:params.selectorVideo}]
         })
         .filter(dayOfWeek)
         .groupBy([stringSlot, getHour], mixpanel.reducer.count())
@@ -176,7 +176,7 @@
         return Events({
           from_date: params.from,
           to_date:   params.to,
-          event_selectors: [{event: 'Page View', selector:params.selector}, {event: 'Video Started', selector:params.selector}]
+          event_selectors: [{event: 'Page View', selector:params.selectorStory}, {event: 'Video Started', selector:params.selectorVideo}]
         })
         .filter(eightHours)
         .filter(item => stringSlot(item) <= 20)
@@ -300,24 +300,29 @@
       });
 
       function Script() {
-        var selector = 'defined (properties["Referrer Slot"]) and defined (properties["Referrer Position"]) and (properties["Referrer Is Headline"] == "FALSE") and defined (properties["Story Headline"])'
+        var selectorStory = 'defined (properties["Referrer Slot"]) and defined (properties["Referrer Position"]) and (properties["Referrer Is Headline"] == "FALSE") and defined (properties["Story Headline"])'
+        var selectorVideo = 'defined (properties["Referrer Slot"]) and defined (properties["Referrer Position"]) and defined (properties["Story Headline"])'
 
         switch (platform) {
           case 'Desktop':
-            selector += ' and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows")'
+            selectorStory += ' and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows")'
+            selectorVideo += ' and (properties["$os"] == "Linux" or properties["$os"] == "Mac OS X" or properties["$os"] == "Windows")'
             break;
           case 'Mobile':
-            selector += '  and (properties["$os"] != "Linux" and properties["$os"] != "Mac OS X" and properties["$os"] != "Windows")'
+            selectorStory += '  and (properties["$os"] != "Linux" and properties["$os"] != "Mac OS X" and properties["$os"] != "Windows")'
+            selectorVideo += '  and (properties["$os"] != "Linux" and properties["$os"] != "Mac OS X" and properties["$os"] != "Windows")'
             break;
           case 'All':
             break;
         }
 
-        selector +=  ' and (properties["Edition Name"] == "' + edition + '")'
-        selector += ' and not "clubhouse" in properties["Referring Page"] and defined (properties["Referring Page"]) and not "-News" in properties["Referring Page"] and not "-Column" in properties["Referring Page"] and not "-Insider" in properties["Referring Page"]'
+        selectorStory +=  ' and (properties["Edition Name"] == "' + edition + '")'
+        selectorVideo +=  ' and (properties["Edition Name"] == "' + edition + '")'
+        selectorStory += ' and not "clubhouse" in properties["Referring Page"] and defined (properties["Referring Page"]) and not "-News" in properties["Referring Page"] and not "-Column" in properties["Referring Page"] and not "-Insider" in properties["Referring Page"]'
+        selectorVideo += ' and not "clubhouse" in properties["Referring Page"] and defined (properties["Referring Page"]) and not "-News" in properties["Referring Page"] and not "-Column" in properties["Referring Page"] and not "-Insider" in properties["Referring Page"]
 
         // set this to the index from the dropdown
-        var homepageSelector = selector + 'and (properties["Referring Page"] == "' + index + '")'
+        var homepageSelector = selectorStory + 'and (properties["Referring Page"] == "' + index + '")'
 
         var highChartsConfig = {
               tooltip: {
@@ -347,13 +352,15 @@
         var utcToEst = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}))
 
         var pageViewSlotTodayParams = {
-          selector: homepageSelector,
+          selectorStory: homepageSelector,
+          selectoryVideo: selectorVideo,
           from: new Date(utcToEst - 1000 * 3600 * 8).toISOString().split('T')[0],
           to: utcToEst.toISOString().split('T')[0],
         }
 
         var pageViewAverageParams = {
           selector: homepageSelector,
+          selectoryVideo: selectorVideo,
           to: new Date().toISOString().split('T')[0],
           from: new Date(new Date() - 60 * 60 * 1000 * 24 * 20).toISOString().split('T')[0],
         }
@@ -495,7 +502,8 @@
         var jqlParams = {
           to: new Date().toISOString().split('T')[0],
           from: new Date(new Date() - 60 * 60 * 1000 * 24 * 7).toISOString().split('T')[0],
-          selector: homepageSelector
+          selectorStory: homepageSelector,
+          selectorVideo: selectorVideo
         }
 
         var query = $('#multiseg').html()
