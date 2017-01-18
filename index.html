@@ -467,7 +467,7 @@
         /* index page views */
 
         var pageViewIndexParams = {
-          where: selector,
+          where: selectorStory,
           on: 'properties["Referring Page"]',
           to_date: utcToEst.toISOString().split('T')[0],
           from_date: new Date(utcToEst - 60 * 60 * 1000 * 24 * 7).toISOString().split('T')[0],
