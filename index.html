@@ -573,7 +573,7 @@
 
       function pad(num, size){ return ('000000000' + num).substr(-size)};
       function percent(num, denom){
-        if (denom == 0 || !denom || !num) {
+        if (!denom || !num) {
           return 0
         } else {
           return ((num - denom) / denom * 100).toFixed(1)
