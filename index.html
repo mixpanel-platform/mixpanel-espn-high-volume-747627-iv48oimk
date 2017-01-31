@@ -303,7 +303,7 @@
 
       function Script() {
         var selectorStory = 'defined (properties["Referrer Slot"]) and defined (properties["Referrer Position"]) and (properties["Referrer Is Headline"] == "FALSE") and defined (properties["Story Headline"])'
-        var selectorVideo = 'defined (properties["Referrer Slot"]) and defined (properties["Referrer Position"]) and defined (properties["Story Headline"])'
+        var selectorVideo = 'defined (properties["Referrer Slot"]) and defined (properties["Referrer Position"])'
 
         switch (platform) {
           case 'Desktop':
@@ -321,7 +321,7 @@
         selectorStory +=  ' and (properties["Edition Name"] == "' + edition + '")'
         selectorVideo +=  ' and (properties["Edition Name"] == "' + edition + '")'
         selectorStory += ' and not "clubhouse" in properties["Referring Page"] and defined (properties["Referring Page"]) and not "-News" in properties["Referring Page"] and not "-Column" in properties["Referring Page"] and not "-Insider" in properties["Referring Page"]'
-        selectorVideo += ' and not "clubhouse" in properties["Referring Page"] and defined (properties["Referring Page"]) and not "-News" in properties["Referring Page"] and not "-Column" in properties["Referring Page"] and not "-Insider" in properties["Referring Page"]'
+        selectorVideo += ' and not "clubhouse" in properties["Referring Page"] and not "-News" in properties["Referring Page"] and not "-Column" in properties["Referring Page"] and not "-Insider" in properties["Referring Page"]'
 
         // set this to the index from the dropdown
         var homepageSelector = selectorStory + 'and (properties["Sport/League"] == "' + index + '")'
